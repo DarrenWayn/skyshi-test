@@ -1,5 +1,5 @@
-import { TActivity } from "@models/activity";
-import { TTodos } from "@models/todos";
+import { TActivity } from "@models/activity/index";
+import { TTodos } from "@models/todos/index";
 import * as React from "react";
 import createActivity from "@api/activity/createActivity";
 import deleteActivity from "@api/activity/deleteActivity";
