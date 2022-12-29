@@ -1,10 +1,10 @@
-import { TActivity } from "@models/activity/index";
-import { TTodos } from "@models/todos/index";
+import { TActivity } from "../../models/activity/index";
+import { TTodos } from "../../models/todos/index";
 import * as React from "react";
-import createActivity from "@api/activity/createActivity";
-import deleteActivity from "@api/activity/deleteActivity";
-import getActivityList from "@api/activity/getActivityList";
-import updateActivity from "@api/activity/updateActivity";
+import createActivity from "../../api/activity/createActivity";
+import deleteActivity from "../../api/activity/deleteActivity";
+import getActivityList from "../../api/activity/getActivityList";
+import updateActivity from "../../api/activity/updateActivity";
 
 export const ActivityContext = React.createContext({} as any);
 

@@ -1,12 +1,12 @@
-import updateActivity from "@api/activity/updateActivity";
-import createTodo from "@api/todos/createTodo";
-import getTodoList from "@api/todos/getTodoList";
-import updateTodo from "@api/todos/updateTodo";
-import deleteTodo from "@api/todos/deleteTodo";
-import { TTodos, TTodosResponse } from "@models/todos/index";
-import { filters, options } from "constants/index";
+import updateActivity from "../../api/activity/updateActivity";
+import createTodo from "../../api/todos/createTodo";
+import getTodoList from "../../api/todos/getTodoList";
+import updateTodo from "../../api/todos/updateTodo";
+import deleteTodo from "../../api/todos/deleteTodo";
+import { TTodos, TTodosResponse } from "../../models/todos/index";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { filters, options } from "../../constants";
 
 function Todos() {
   const [todoList, setTodoList] = useState<TTodos | undefined>();

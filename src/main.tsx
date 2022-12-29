@@ -4,7 +4,7 @@ import App from "./App";
 import "./index.css";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Todos from "@components/todos";
+import Todos from "./components/todos";
 
 const router = createBrowserRouter([
   {

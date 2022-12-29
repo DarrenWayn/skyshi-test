@@ -1,4 +1,4 @@
-import { TResponseActivity } from "@models/activity";
+import { TResponseActivity } from "../../models/activity";
 import customAxios from "../api";
 
 const deleteActivity = async (
