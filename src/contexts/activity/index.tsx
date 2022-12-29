@@ -1,22 +1,73 @@
 import { TActivity } from "@models/activity";
-import { useState, createContext } from "react";
+import { TTodos } from "@models/todos";
+import * as React from "react";
+import createActivity from "@api/activity/createActivity";
+import deleteActivity from "@api/activity/deleteActivity";
+import getActivityList from "@api/activity/getActivityList";
+import updateActivity from "@api/activity/updateActivity";
 
-export const ActivityContext = createContext({} as any);
+export const ActivityContext = React.createContext({} as any);
 
 const ActivityContextProvider = (props: any) => {
-  const [activityList, setActivityList] = useState<TActivity[]>([]);
-  const [activity, setActivity] = useState<string>("");
-  const [editActivity, setEditActivity] = useState({} as any);
+  const [activityList, setActivityList] = React.useState<TActivity[]>([]);
+  const [activity, setActivity] = React.useState<string>("");
+  const [editActivity, setEditActivity] = React.useState({} as any);
+
+  const [todoList, setTodoList] = React.useState<TTodos | undefined>();
+
+  const handleCreateActivity = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const data = {
+      title: "New Activity",
+      email: "dwayn.dev@gmail.com",
+    };
+    const activities = await createActivity(data);
+    setActivityList([...activityList, activities]);
+  };
+
+  const handleDeleteActivity = async (activityId: number) => {
+    await deleteActivity(activityId);
+    setActivityList(
+      activityList.filter((activity) => activity.id !== activityId)
+    );
+  };
+
+  const handleUpdateActivity = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editActivity?.id) return;
+
+    const valueEditActivity = {
+      title: activity,
+      activity_group_id: editActivity?.id,
+    };
+
+    const { data: title } = await updateActivity(valueEditActivity);
+    setTodoList(title);
+    setActivity("");
+    window.location.reload();
+  };
+
+  const handleEditActivity = (activity: any) => {
+    setActivity(activity.title);
+    setEditActivity(activity);
+  };
+
+  React.useEffect(() => {
+    (async () => {
+      const getLists = await getActivityList();
+      setActivityList(getLists.data);
+    })();
+  }, []);
 
   return (
     <ActivityContext.Provider
       value={{
-        activity,
-        setActivity,
         activityList,
-        setActivityList,
-        editActivity,
-        setEditActivity,
+        todoList,
+        handleCreateActivity,
+        handleDeleteActivity,
+        handleUpdateActivity,
+        handleEditActivity,
       }}
     >
       {props.children}
