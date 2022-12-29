@@ -1,4 +1,4 @@
-import { TTodosResponse } from "../../models/todos";
+import { TTodosResponse } from "@models/todos";
 import customAxios from "../api";
 
 const getTodoList = async (todoId: any): Promise<TTodosResponse[]> => {

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import createActivity from "../../api/activity/createActivity";
-import deleteActivity from "../../api/activity/deleteActivity";
-import getActivityList from "../../api/activity/getActivityList";
-import { TActivity } from "../../models/activity";
 import { Link } from "react-router-dom";
+import { TActivity } from "@models/activity";
+import createActivity from "@api/activity/createActivity";
+import getActivityList from "@api/activity/getActivityList";
+import deleteActivity from "@api/activity/deleteActivity";
 
 function Activity() {
   const [activityList, setActivityList] = useState<TActivity[]>([]);

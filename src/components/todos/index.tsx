@@ -1,23 +1,23 @@
-import React, { useEffect, useRef, useState } from "react";
+import updateActivity from "@api/activity/updateActivity";
+import createTodo from "@api/todos/createTodo";
+import getTodoList from "@api/todos/getTodoList";
+import updateTodo from "@api/todos/updateTodo";
+import deleteTodo from "@api/todos/deleteTodo";
+import { TTodos, TTodosResponse } from "@models/todos/index";
+import { filters, options } from "constants/index";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import updateActivity from "../../api/activity/updateActivity";
-import createTodo from "../../api/todos/createTodo";
-import deleteTodo from "../../api/todos/deleteTodo";
-import getTodoList from "../../api/todos/getTodoList";
-import updateTodo from "../../api/todos/updateTodo";
-import { options, filters } from "../../constants";
-import { TTodos } from "../../models/todos";
 
 function Todos() {
   const [todoList, setTodoList] = useState<TTodos | undefined>();
   const [cards, setCards] = useState<TTodos[]>([]);
   const [title, setTitle] = useState<string>("");
   const [priority, setPriority] = useState<string>("");
-  /* const [filter, setFilter] = useState<string>(""); */
-  const [editTodo, setEditTodo] = useState<object>({});
+  const [_, setFilter] = useState<string>("");
+  const [editTodo, setEditTodo] = useState<TTodosResponse>({} as any);
 
   const [activity, setActivity] = useState<string>("");
-  const [editActivity, setEditActivity] = useState<object>({});
+  const [editActivity, setEditActivity] = useState<TTodosResponse>({} as any);
 
   const { todoId } = useParams();
 
@@ -37,11 +37,11 @@ function Todos() {
 
   const handleUpdateTodo = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editTodo?.id) return;
+    if (!editTodo.id) return;
 
     const valueEdit = {
       title: title,
-      id: editTodo?.id,
+      id: editTodo.id,
       priority,
     };
 
@@ -57,7 +57,7 @@ function Todos() {
 
     const valueEditActivity = {
       title: activity,
-      activity_group_id: todoId,
+      activity_group_id: editActivity?.id,
     };
 
     const { data: title } = await updateActivity(valueEditActivity);
@@ -77,12 +77,12 @@ function Todos() {
   };
 
   const handleCancelEditTodo = () => {
-    setEditTodo({});
+    setEditTodo({} as any);
     setTitle("");
   };
 
   const handleCancelEditActivity = () => {
-    setEditActivity({});
+    setEditActivity({} as any);
     setActivity("");
   };
 

@@ -1,5 +1,5 @@
 export type TActivity = {
-  id: number;
+  id?: number;
   title: string;
   email: string;
 };

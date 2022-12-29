@@ -6,7 +6,7 @@ export type TTodos = {
 };
 
 export type TTodosResponse = {
-  id: number;
+  id: string;
   title: string;
   created_at: string;
   todo_items: TTodos[];
