@@ -97,31 +97,30 @@ function Todos() {
     console.log(filter);
   };
 
-  /* const handleCheckbox = async (todo: any) => { */
-  /*   let items = []; */
-  /*   for (let i = 0; i < cards.length; i++) { */
-  /*     if (cards[i].id !== todo.id) { */
-  /*       items.push(cards[i]); */
-  /*     } else { */
-  /*       items.push({ */
-  /*         ...cards[i], */
-  /*         is_active: cards[i].is_active === 1 ? 0 : 1, */
-  /*       }); */
-  /*     } */
-  /*   } */
-  /*   setCards(items); */
-  /*   const updatedItem = cards.find((card) => card.id === todo.id); */
-  /*   const valueEdit = { */
-  /*     title: updatedItem.data, */
-  /*     id: updatedItem.id, */
-  /*     is_active: updatedItem.is_active, */
-  /*     priority: updatedItem.priority, */
-  /*   }; */
-  /*   const { items_todo: item } = await updateTodo(valueEdit); */
-  /*   setCards(item); */
-  /*   setTitle(""); */
-  /*   window.location.reload(); */
-  /* }; */
+  const handleCheckbox = async (id: number) => {
+    let newCards = [];
+    for (let i = 0; i < cards.length; i++) {
+      if (cards[i].id !== id) {
+        newCards.push(cards[i]);
+      } else {
+        newCards.push({
+          ...cards[i],
+          is_active: cards[i].is_active === 1 ? 0 : 1,
+        });
+      }
+    }
+    setCards(newCards);
+    const updatedItem: any = newCards.find((card) => card.id === id);
+    const valueEdit = {
+      title: updatedItem.data,
+      id: updatedItem.id,
+      is_active: updatedItem.is_active,
+      priority: updatedItem.priority,
+    };
+    const { todo_items: item } = await updateTodo(valueEdit);
+    setCards(item);
+    setTitle("");
+  };
 
   useEffect(() => {
     (async () => {
@@ -202,11 +201,11 @@ function Todos() {
           {cards &&
             cards?.map((card: any) => (
               <li key={card.id}>
-                {/* <input */}
-                {/*   type="checkbox" */}
-                {/*   checked={card.is_active === 0} */}
-                {/*   onClick={handleCheckbox.bind(this, card)} */}
-                {/* /> */}
+                <input
+                  type="checkbox"
+                  checked={card.is_active === 0}
+                  onClick={handleCheckbox.bind(this, card.id)}
+                />
                 <a onClick={handleEditTodo.bind(this, card)}>{card.title}</a>
                 {card.priority}
                 <button onClick={() => handleDeleteTodo(card.id)}>X</button>
