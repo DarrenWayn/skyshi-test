@@ -32,7 +32,6 @@ function Todos() {
     const { todo_items: items } = await createTodo(data);
     setCards(items);
     setTitle("");
-    /* window.location.reload(); */
   };
 
   const handleUpdateTodo = async (e: React.FormEvent) => {
@@ -48,12 +47,12 @@ function Todos() {
     const { todo_items: items } = await updateTodo(valueEdit);
     setCards(items);
     setTitle("");
-    /* window.location.reload(); */
+    handleCancelEditTodo();
   };
 
   const handleUpdateActivity = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editActivity?.id) return;
+    if (!editActivity.id) return;
 
     const valueEditActivity = {
       title: activity,
@@ -63,7 +62,7 @@ function Todos() {
     const { data: title }: any = await updateActivity(valueEditActivity);
     setTodoList(title);
     setActivity("");
-    /* window.location.reload(); */
+    handleCancelEditActivity();
   };
 
   const handleEditTodo = (todo: any) => {
@@ -77,12 +76,12 @@ function Todos() {
   };
 
   const handleCancelEditTodo = () => {
-    setEditTodo({} as any);
+    setEditTodo({} as TTodosResponse);
     setTitle("");
   };
 
   const handleCancelEditActivity = () => {
-    setEditActivity({} as any);
+    setEditActivity({} as TTodosResponse);
     setActivity("");
   };
 
@@ -146,8 +145,16 @@ function Todos() {
 
       {editActivity.id ? (
         <React.Fragment>
-          <form onSubmit={handleUpdateActivity}>
-            <label htmlFor="deck-title">Todos</label>
+          <form
+            onSubmit={handleUpdateActivity}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              width: "50%",
+              gap: "1rem",
+            }}
+          >
+            <label htmlFor="deck-title">Rename Activity: </label>
             <input
               id="deck-title"
               value={activity}
@@ -156,45 +163,67 @@ function Todos() {
                 setActivity(e.target.value);
               }}
             />
-            <button onClick={handleUpdateActivity}>save activity</button>
-            <button onClick={handleCancelEditActivity}>Cancel Edit</button>
+            <button>
+              {editActivity.id ? "save activity" : "create activity"}
+            </button>
+            {editActivity.id && (
+              <button onClick={handleCancelEditActivity}>Cancel Edit</button>
+            )}
           </form>
         </React.Fragment>
       ) : null}
-      <label htmlFor="filter">Filter: </label>
-      <select
-        name="filter"
-        id="filter"
-        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-          setFilter(e.target.value)
-        }
+      <div
+        className="todo-list"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          width: "50%",
+          gap: "1rem",
+        }}
       >
-        {filters?.map((filter) => (
-          <option
-            value={filter.value}
-            onClick={handleFilterTodo.bind(this, filter)}
-          >
-            {filter.label}
-          </option>
-        ))}
-      </select>
-      <ul className="decks">
-        {cards &&
-          cards?.map((card: any) => (
-            <li key={card.id}>
-              {/* <input */}
-              {/*   type="checkbox" */}
-              {/*   checked={card.is_active === 0} */}
-              {/*   onClick={handleCheckbox.bind(this, card)} */}
-              {/* /> */}
-              <a onClick={handleEditTodo.bind(this, card)}>{card.title}</a>
-              {card.priority}
-              <button onClick={() => handleDeleteTodo(card.id)}>X</button>
-            </li>
+        <label htmlFor="filter">Filter: </label>
+        <select
+          name="filter"
+          id="filter"
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+            setFilter(e.target.value)
+          }
+        >
+          {filters?.map((filter) => (
+            <option
+              value={filter.value}
+              onClick={handleFilterTodo.bind(this, filter)}
+            >
+              {filter.label}
+            </option>
           ))}
-      </ul>
+        </select>
+        <ul className="decks">
+          {cards &&
+            cards?.map((card: any) => (
+              <li key={card.id}>
+                {/* <input */}
+                {/*   type="checkbox" */}
+                {/*   checked={card.is_active === 0} */}
+                {/*   onClick={handleCheckbox.bind(this, card)} */}
+                {/* /> */}
+                <a onClick={handleEditTodo.bind(this, card)}>{card.title}</a>
+                {card.priority}
+                <button onClick={() => handleDeleteTodo(card.id)}>X</button>
+              </li>
+            ))}
+        </ul>
+      </div>
 
-      <form onSubmit={editTodo?.id ? handleUpdateTodo : handleCreateTodo}>
+      <form
+        onSubmit={editTodo?.id ? handleUpdateTodo : handleCreateTodo}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          width: "50%",
+          gap: "1rem",
+        }}
+      >
         <label htmlFor="deck-title">Todos</label>
         <input
           id="deck-title"
