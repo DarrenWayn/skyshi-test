@@ -32,7 +32,7 @@ function Todos() {
     const { todo_items: items } = await createTodo(data);
     setCards(items);
     setTitle("");
-    window.location.reload();
+    /* window.location.reload(); */
   };
 
   const handleUpdateTodo = async (e: React.FormEvent) => {
@@ -48,7 +48,7 @@ function Todos() {
     const { todo_items: items } = await updateTodo(valueEdit);
     setCards(items);
     setTitle("");
-    window.location.reload();
+    /* window.location.reload(); */
   };
 
   const handleUpdateActivity = async (e: React.FormEvent) => {
@@ -60,10 +60,10 @@ function Todos() {
       activity_group_id: editActivity?.id,
     };
 
-    const { data: title } = await updateActivity(valueEditActivity);
+    const { data: title }: any = await updateActivity(valueEditActivity);
     setTodoList(title);
     setActivity("");
-    window.location.reload();
+    /* window.location.reload(); */
   };
 
   const handleEditTodo = (todo: any) => {
@@ -90,7 +90,7 @@ function Todos() {
     if (!index) return;
     const deleteTodos = await deleteTodo(index);
     setCards(deleteTodos?.todo_items);
-    window.location.reload();
+    /* window.location.reload(); */
   };
 
   const handleFilterTodo = (filter: any) => {
@@ -127,11 +127,11 @@ function Todos() {
   useEffect(() => {
     (async () => {
       if (!todoId) return;
-      const getTodos = await getTodoList(todoId);
+      const getTodos: any = await getTodoList(todoId);
       setTodoList(getTodos);
       setCards(getTodos?.todo_items);
     })();
-  }, [todoId]);
+  }, [todoId, cards]);
 
   const backArrow = "<";
 

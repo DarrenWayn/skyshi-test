@@ -14,7 +14,7 @@ function Activity() {
       title: "New Activity",
       email: "dwayn.dev@gmail.com",
     };
-    const activities = await createActivity(data);
+    const activities: any = await createActivity(data);
     setActivityList([...activityList, activities]);
   };
 
@@ -36,7 +36,7 @@ function Activity() {
     <React.Fragment>
       <h1>Activity</h1>
       <ul className="decks">
-        {activityList.map((activity) => (
+        {activityList.map((activity: any) => (
           <li key={activity.id}>
             <Link to={`detail/${activity.id}`}>{activity?.title}</Link>
             <button onClick={() => handleDeleteActivity(activity.id)}>X</button>
