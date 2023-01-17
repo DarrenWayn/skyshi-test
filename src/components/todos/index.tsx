@@ -1,25 +1,41 @@
-import updateActivity from "../../api/activity/updateActivity";
 import createTodo from "../../api/todos/createTodo";
 import getTodoList from "../../api/todos/getTodoList";
 import updateTodo from "../../api/todos/updateTodo";
 import deleteTodo from "../../api/todos/deleteTodo";
 import { TTodos, TTodosResponse } from "../../models/todos/index";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { filters, options } from "../../constants";
+import { ActivityContext } from "../../contexts/activity";
 
 function Todos() {
   const [todoList, setTodoList] = useState<TTodos | undefined>();
   const [cards, setCards] = useState<TTodos[]>([]);
   const [title, setTitle] = useState<string>("");
   const [priority, setPriority] = useState<string>("");
-  const [_, setFilter] = useState<string>("");
   const [editTodo, setEditTodo] = useState<TTodosResponse>({} as any);
 
-  const [activity, setActivity] = useState<string>("");
-  const [editActivity, setEditActivity] = useState<TTodosResponse>({} as any);
+  const [activeDropdown, setActiveDropdown] = useState<string>("");
+
+  const {
+    activity,
+    setActivity,
+    editActivity,
+    handleUpdateActivity,
+    handleEditActivity,
+    handleCancelEditActivity,
+  } = useContext(ActivityContext);
 
   const { todoId } = useParams();
+
+  useEffect(() => {
+    (async () => {
+      if (!todoId) return;
+      const getTodos: any = await getTodoList(todoId);
+      setTodoList(getTodos);
+      setCards(getTodos?.todo_items);
+    })();
+  }, []);
 
   const handleCreateTodo = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,29 +66,9 @@ function Todos() {
     handleCancelEditTodo();
   };
 
-  const handleUpdateActivity = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editActivity.id) return;
-
-    const valueEditActivity = {
-      title: activity,
-      activity_group_id: editActivity?.id,
-    };
-
-    const { data: title }: any = await updateActivity(valueEditActivity);
-    setTodoList(title);
-    setActivity("");
-    handleCancelEditActivity();
-  };
-
   const handleEditTodo = (todo: any) => {
     setTitle(todo.title);
     setEditTodo(todo);
-  };
-
-  const handleEditActivity = (activity: any) => {
-    setActivity(activity.title);
-    setEditActivity(activity);
   };
 
   const handleCancelEditTodo = () => {
@@ -80,22 +76,17 @@ function Todos() {
     setTitle("");
   };
 
-  const handleCancelEditActivity = () => {
-    setEditActivity({} as TTodosResponse);
-    setActivity("");
-  };
-
   const handleDeleteTodo = async (index: number) => {
     if (!index) return;
     const deleteTodos = await deleteTodo(index);
     setCards(deleteTodos?.todo_items);
-    /* window.location.reload(); */
   };
 
-  const handleFilterTodo = (filter: any) => {
-    if (!filter) return;
-    console.log(filter);
-  };
+  /* const handleFilterTodo = (filter: any) => { */
+  /*   if (!filter) return; */
+  /*   console.log(filter.id); */
+  /*   setActiveDropdown(filter.id); */
+  /* }; */
 
   const handleCheckbox = async (id: number) => {
     let newCards = [];
@@ -112,7 +103,7 @@ function Todos() {
     setCards(newCards);
     const updatedItem: any = newCards.find((card) => card.id === id);
     const valueEdit = {
-      title: updatedItem.data,
+      title: updatedItem?.data,
       id: updatedItem.id,
       is_active: updatedItem.is_active,
       priority: updatedItem.priority,
@@ -122,14 +113,49 @@ function Todos() {
     setTitle("");
   };
 
+  /* const checkbox = useMemo(() => handleCheckbox, [cards]); */
+
   useEffect(() => {
-    (async () => {
-      if (!todoId) return;
-      const getTodos: any = await getTodoList(todoId);
-      setTodoList(getTodos);
-      setCards(getTodos?.todo_items);
-    })();
-  }, [todoId, cards]);
+    let items = cards;
+    const sortAlphabetAscending = (a: any, b: any) => {
+      if (a.title > b.title) {
+        return 1;
+      } else if (a.title < b.title) {
+        return -1;
+      } else {
+        return 0;
+      }
+    };
+
+    const sortAlphabetDescending = (a: any, b: any) => {
+      if (a.title < b.title) {
+        return 1;
+      } else if (a.title > b.title) {
+        return -1;
+      } else {
+        return 0;
+      }
+    };
+
+    if (activeDropdown === "terbaru") {
+      let sortedItems = items.sort((a: any, b: any) => b.id - a.id);
+      setCards(sortedItems);
+    } else if (activeDropdown === "terlama") {
+      let sortedItems = items.sort((a: any, b: any) => a.id - b.id);
+      setCards(sortedItems);
+    } else if (activeDropdown === "ascending") {
+      let sortedItems = items.sort(sortAlphabetAscending);
+      setCards(sortedItems);
+    } else if (activeDropdown === "descending") {
+      let sortedItems = items.sort(sortAlphabetDescending);
+      setCards(sortedItems);
+    } else {
+      let sortedItems = items.sort(
+        (a: any, b: any) => b.is_active - a.is_active
+      );
+      setCards(sortedItems);
+    }
+  }, [activeDropdown]);
 
   const backArrow = "<";
 
@@ -184,14 +210,15 @@ function Todos() {
         <select
           name="filter"
           id="filter"
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-            setFilter(e.target.value)
-          }
+          /* onClick={(e: any) => setActiveDropdown(e.target.value)} */
         >
           {filters?.map((filter) => (
             <option
+              key={filter.id}
               value={filter.value}
-              onClick={handleFilterTodo.bind(this, filter)}
+              onClick={(e: any) => setActiveDropdown(e.target.value)}
+              /* onClick={handleFilterTodo.bind(this, filter)} */
+              /* onClick={() => console.log(filter.id)} */
             >
               {filter.label}
             </option>
@@ -205,6 +232,8 @@ function Todos() {
                   type="checkbox"
                   checked={card.is_active === 0}
                   onClick={handleCheckbox.bind(this, card.id)}
+                  readOnly
+                  /* onChange={() => handleCheckbox(card.id)} */
                 />
                 <a onClick={handleEditTodo.bind(this, card)}>{card.title}</a>
                 {card.priority}
@@ -241,7 +270,9 @@ function Todos() {
           }
         >
           {options?.map((option) => (
-            <option value={option.value}>{option.label}</option>
+            <option key={option.id} value={option.value}>
+              {option.label}
+            </option>
           ))}
         </select>
         <button>{editTodo.id ? "save todo" : "create todo"}</button>
