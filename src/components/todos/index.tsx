@@ -22,6 +22,7 @@ function Todos() {
   );
 
   const [activeDropdown, setActiveDropdown] = useState<string>("");
+  const [sorterCards, setSortedCards] = useState<TTodos[]>([]);
 
   const { todoId } = useParams();
 
@@ -156,12 +157,12 @@ function Todos() {
       case "descending":
         sortedItems.sort(sortAlphabetDescending);
         break;
-      case "belum selesai":
+      case "belum-selesai":
         sortedItems.sort((a: any, b: any) => b.is_active - a.is_active);
         break;
     }
-    setCards(sortedItems);
-  }, [activeDropdown]);
+    setSortedCards(sortedItems);
+  }, [activeDropdown, cards]);
 
   const backArrow = "<";
 
@@ -230,8 +231,8 @@ function Todos() {
           ))}
         </select>
         <ul className="decks">
-          {cards?.map((card: any) => (
-            <li key={card.id}>
+          {sorterCards?.map((card: any, index) => (
+            <li key={index}>
               <input
                 type="checkbox"
                 checked={card.is_active === 0}
@@ -277,9 +278,8 @@ function Todos() {
           {options?.map((option) => (
             <option
               key={option.id}
-              defaultValue={priority}
               value={option.value}
-              selected={true || priority}
+              defaultValue={priority}
             >
               {option?.label}
             </option>
