@@ -38,7 +38,9 @@ function Activity() {
       <ul className="decks">
         {activityList.map((activity: any) => (
           <li key={activity.id}>
-            <Link to={`detail/${activity.id}`}>{activity?.title}</Link>
+            <Link to={`detail/${activity.id}`}>
+              {activity?.title}, {activity?.created_at}
+            </Link>
             <button onClick={() => handleDeleteActivity(activity.id)}>X</button>
           </li>
         ))}

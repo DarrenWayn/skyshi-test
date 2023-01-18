@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { filters, options } from "../../constants";
 import updateActivity from "../../api/activity/updateActivity";
+import useSortCards from "../../hooks/sorting";
 
 function Todos() {
   const [todoList, setTodoList] = useState<TTodos | undefined>();
@@ -122,46 +123,8 @@ function Todos() {
   };
 
   useEffect(() => {
-    const sortAlphabetAscending = (a: any, b: any) => {
-      if (a.title > b.title) {
-        return 1;
-      } else if (a.title < b.title) {
-        return -1;
-      } else {
-        return 0;
-      }
-    };
-
-    const sortAlphabetDescending = (a: any, b: any) => {
-      if (a.title < b.title) {
-        return 1;
-      } else if (a.title > b.title) {
-        return -1;
-      } else {
-        return 0;
-      }
-    };
-
-    let sortedItems = [...cards];
-
-    switch (activeDropdown) {
-      case "terbaru":
-        sortedItems.sort((a: any, b: any) => b.id - a.id);
-        break;
-      case "terlama":
-        sortedItems.sort((a: any, b: any) => a.id - b.id);
-        break;
-      case "ascending":
-        sortedItems.sort(sortAlphabetAscending);
-        break;
-      case "descending":
-        sortedItems.sort(sortAlphabetDescending);
-        break;
-      case "belum-selesai":
-        sortedItems.sort((a: any, b: any) => b.is_active - a.is_active);
-        break;
-    }
-    setSortedCards(sortedItems);
+    const sortedCards = useSortCards(cards, activeDropdown);
+    setSortedCards(sortedCards);
   }, [activeDropdown, cards]);
 
   const backArrow = "<";
