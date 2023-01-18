@@ -3,10 +3,10 @@ import getTodoList from "../../api/todos/getTodoList";
 import updateTodo from "../../api/todos/updateTodo";
 import deleteTodo from "../../api/todos/deleteTodo";
 import { TTodos, TTodosResponse } from "../../models/todos/index";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { filters, options } from "../../constants";
-import { ActivityContext } from "../../contexts/activity";
+import updateActivity from "../../api/activity/updateActivity";
 
 function Todos() {
   const [todoList, setTodoList] = useState<TTodos | undefined>();
@@ -14,28 +14,50 @@ function Todos() {
   const [title, setTitle] = useState<string>("");
   const [priority, setPriority] = useState<string>("");
   const [editTodo, setEditTodo] = useState<TTodosResponse>({} as any);
+  const [activity, setActivity] = useState<string>("");
+  const [editActivity, setEditActivity] = useState<TTodosResponse>({} as any);
 
   const [activeDropdown, setActiveDropdown] = useState<string>("");
 
-  const {
-    activity,
-    setActivity,
-    editActivity,
-    handleUpdateActivity,
-    handleEditActivity,
-    handleCancelEditActivity,
-  } = useContext(ActivityContext);
-
   const { todoId } = useParams();
 
+  const iniHasil = useCallback(async () => {
+    if (!todoId) return;
+    const getTodos: any = await getTodoList(todoId);
+    /* setTodoList(getTodos?.todo_items); */
+    /* setTodoList((prev) => prev); */
+    /* setCards((prev) => ({ ...prev })); */
+    setCards(getTodos?.todo_items);
+  }, [cards]);
+
   useEffect(() => {
-    (async () => {
-      if (!todoId) return;
-      const getTodos: any = await getTodoList(todoId);
-      setTodoList(getTodos);
-      setCards(getTodos?.todo_items);
-    })();
-  }, []);
+    iniHasil();
+  }, [iniHasil]);
+
+  const handleUpdateActivity = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editActivity.id) return;
+
+    const valueEditActivity = {
+      title: activity,
+      activity_group_id: editActivity?.id,
+    };
+
+    const { data: title }: any = await updateActivity(valueEditActivity);
+    setTodoList(title);
+    setActivity("");
+    handleCancelEditActivity();
+  };
+
+  const handleEditActivity = (activity: any) => {
+    setActivity(activity.title);
+    setEditActivity(activity);
+  };
+
+  const handleCancelEditActivity = () => {
+    setEditActivity({} as TTodosResponse);
+    setActivity("");
+  };
 
   const handleCreateTodo = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -155,7 +177,7 @@ function Todos() {
       );
       setCards(sortedItems);
     }
-  }, [activeDropdown]);
+  }, []);
 
   const backArrow = "<";
 
