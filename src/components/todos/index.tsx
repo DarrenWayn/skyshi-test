@@ -3,7 +3,7 @@ import getTodoList from "../../api/todos/getTodoList";
 import updateTodo from "../../api/todos/updateTodo";
 import deleteTodo from "../../api/todos/deleteTodo";
 import { TTodos, TTodosResponse } from "../../models/todos/index";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { filters, options } from "../../constants";
 import updateActivity from "../../api/activity/updateActivity";
@@ -12,27 +12,27 @@ function Todos() {
   const [todoList, setTodoList] = useState<TTodos | undefined>();
   const [cards, setCards] = useState<TTodos[]>([]);
   const [title, setTitle] = useState<string>("");
-  const [priority, setPriority] = useState<string>("");
-  const [editTodo, setEditTodo] = useState<TTodosResponse>({} as any);
+  const [priority, setPriority] = useState<string>("choose-priority");
+  const [editTodo, setEditTodo] = useState<TTodosResponse>(
+    {} as TTodosResponse
+  );
   const [activity, setActivity] = useState<string>("");
-  const [editActivity, setEditActivity] = useState<TTodosResponse>({} as any);
+  const [editActivity, setEditActivity] = useState<TTodosResponse>(
+    {} as TTodosResponse
+  );
 
   const [activeDropdown, setActiveDropdown] = useState<string>("");
 
   const { todoId } = useParams();
 
-  const iniHasil = useCallback(async () => {
-    if (!todoId) return;
-    const getTodos: any = await getTodoList(todoId);
-    /* setTodoList(getTodos?.todo_items); */
-    /* setTodoList((prev) => prev); */
-    /* setCards((prev) => ({ ...prev })); */
-    setCards(getTodos?.todo_items);
-  }, [cards]);
-
   useEffect(() => {
-    iniHasil();
-  }, [iniHasil]);
+    (async () => {
+      if (!todoId) return;
+      const getTodos: any = await getTodoList(todoId);
+      setTodoList(getTodos);
+      setCards(getTodos.todo_items);
+    })();
+  }, [cards]);
 
   const handleUpdateActivity = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,8 +68,10 @@ function Todos() {
     };
 
     const { todo_items: items } = await createTodo(data);
-    setCards(items);
+    const newCards = [...cards, [items]];
+    setCards(newCards as []);
     setTitle("");
+    setPriority("choose-priority");
   };
 
   const handleUpdateTodo = async (e: React.FormEvent) => {
@@ -83,8 +85,10 @@ function Todos() {
     };
 
     const { todo_items: items } = await updateTodo(valueEdit);
-    setCards(items);
+    const newCards = [...cards, [items]];
+    setCards(newCards as []);
     setTitle("");
+    setPriority("choose-priority");
     handleCancelEditTodo();
   };
 
@@ -100,45 +104,22 @@ function Todos() {
 
   const handleDeleteTodo = async (index: number) => {
     if (!index) return;
-    const deleteTodos = await deleteTodo(index);
-    setCards(deleteTodos?.todo_items);
+    await deleteTodo(index);
+    setCards([...cards.filter((_item, i) => i !== index)]);
   };
-
-  /* const handleFilterTodo = (filter: any) => { */
-  /*   if (!filter) return; */
-  /*   console.log(filter.id); */
-  /*   setActiveDropdown(filter.id); */
-  /* }; */
 
   const handleCheckbox = async (id: number) => {
-    let newCards = [];
-    for (let i = 0; i < cards.length; i++) {
-      if (cards[i].id !== id) {
-        newCards.push(cards[i]);
-      } else {
-        newCards.push({
-          ...cards[i],
-          is_active: cards[i].is_active === 1 ? 0 : 1,
-        });
-      }
-    }
-    setCards(newCards);
-    const updatedItem: any = newCards.find((card) => card.id === id);
-    const valueEdit = {
-      title: updatedItem?.data,
-      id: updatedItem.id,
-      is_active: updatedItem.is_active,
-      priority: updatedItem.priority,
-    };
-    const { todo_items: item } = await updateTodo(valueEdit);
-    setCards(item);
-    setTitle("");
+    const updatedCards = cards.map((card) =>
+      card.id === id
+        ? { ...card, is_active: card.is_active === 1 ? 0 : 1 }
+        : card
+    );
+    setCards(updatedCards);
+    const updatedItem = updatedCards.find((card) => card.id === id);
+    await updateTodo({ ...updatedItem });
   };
 
-  /* const checkbox = useMemo(() => handleCheckbox, [cards]); */
-
   useEffect(() => {
-    let items = cards;
     const sortAlphabetAscending = (a: any, b: any) => {
       if (a.title > b.title) {
         return 1;
@@ -159,25 +140,27 @@ function Todos() {
       }
     };
 
-    if (activeDropdown === "terbaru") {
-      let sortedItems = items.sort((a: any, b: any) => b.id - a.id);
-      setCards(sortedItems);
-    } else if (activeDropdown === "terlama") {
-      let sortedItems = items.sort((a: any, b: any) => a.id - b.id);
-      setCards(sortedItems);
-    } else if (activeDropdown === "ascending") {
-      let sortedItems = items.sort(sortAlphabetAscending);
-      setCards(sortedItems);
-    } else if (activeDropdown === "descending") {
-      let sortedItems = items.sort(sortAlphabetDescending);
-      setCards(sortedItems);
-    } else {
-      let sortedItems = items.sort(
-        (a: any, b: any) => b.is_active - a.is_active
-      );
-      setCards(sortedItems);
+    let sortedItems = [...cards];
+
+    switch (activeDropdown) {
+      case "terbaru":
+        sortedItems.sort((a: any, b: any) => b.id - a.id);
+        break;
+      case "terlama":
+        sortedItems.sort((a: any, b: any) => a.id - b.id);
+        break;
+      case "ascending":
+        sortedItems.sort(sortAlphabetAscending);
+        break;
+      case "descending":
+        sortedItems.sort(sortAlphabetDescending);
+        break;
+      case "belum selesai":
+        sortedItems.sort((a: any, b: any) => b.is_active - a.is_active);
+        break;
     }
-  }, []);
+    setCards(sortedItems);
+  }, [activeDropdown]);
 
   const backArrow = "<";
 
@@ -232,36 +215,33 @@ function Todos() {
         <select
           name="filter"
           id="filter"
-          /* onClick={(e: any) => setActiveDropdown(e.target.value)} */
+          value={activeDropdown || "terbaru"}
+          onChange={(e: any) => setActiveDropdown(e.target.value)}
         >
           {filters?.map((filter) => (
             <option
               key={filter.id}
               value={filter.value}
-              onClick={(e: any) => setActiveDropdown(e.target.value)}
-              /* onClick={handleFilterTodo.bind(this, filter)} */
-              /* onClick={() => console.log(filter.id)} */
+              onClick={() => setActiveDropdown(filter.value)}
             >
               {filter.label}
             </option>
           ))}
         </select>
         <ul className="decks">
-          {cards &&
-            cards?.map((card: any) => (
-              <li key={card.id}>
-                <input
-                  type="checkbox"
-                  checked={card.is_active === 0}
-                  onClick={handleCheckbox.bind(this, card.id)}
-                  readOnly
-                  /* onChange={() => handleCheckbox(card.id)} */
-                />
-                <a onClick={handleEditTodo.bind(this, card)}>{card.title}</a>
-                {card.priority}
-                <button onClick={() => handleDeleteTodo(card.id)}>X</button>
-              </li>
-            ))}
+          {cards?.map((card: any) => (
+            <li key={card.id}>
+              <input
+                type="checkbox"
+                checked={card.is_active === 0}
+                onClick={handleCheckbox.bind(this, card.id)}
+                readOnly
+              />
+              <a onClick={handleEditTodo.bind(this, card)}>{card.title}</a>
+              {card.priority}
+              <button onClick={() => handleDeleteTodo(card.id)}>X</button>
+            </li>
+          ))}
         </ul>
       </div>
 
@@ -283,17 +263,23 @@ function Todos() {
             setTitle(e.target.value);
           }}
         />
-        <label htmlFor="priotity">Choose Priority: </label>
+        <label htmlFor="priority">Choose Priority: </label>
+
         <select
-          name="pririty"
+          name="priority"
           id="priority"
+          value={priority}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
             setPriority(e.target.value)
           }
         >
           {options?.map((option) => (
-            <option key={option.id} value={option.value}>
-              {option.label}
+            <option
+              key={option.id}
+              defaultValue={priority}
+              value={option.value}
+            >
+              {option?.label}
             </option>
           ))}
         </select>
