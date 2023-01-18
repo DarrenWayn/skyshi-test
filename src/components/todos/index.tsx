@@ -94,6 +94,7 @@ function Todos() {
 
   const handleEditTodo = (todo: any) => {
     setTitle(todo.title);
+    setPriority(todo.priority);
     setEditTodo(todo);
   };
 
@@ -278,6 +279,7 @@ function Todos() {
               key={option.id}
               defaultValue={priority}
               value={option.value}
+              selected={true || priority}
             >
               {option?.label}
             </option>
