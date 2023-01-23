@@ -121,6 +121,8 @@ h1 {
 /* More readable underline style for anchor tags without a class. This could be set on anchor tags globally, but it can cause conflicts. */
 a:not([class]) {
   text-decoration-skip-ink: auto;
+  color: white;
+  text-decoration: none;
 }
 
 /* Make it clear that interactive elements are interactive */
