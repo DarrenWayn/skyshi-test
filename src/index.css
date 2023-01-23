@@ -185,14 +185,14 @@ a:not([class]) {
   cursor: not-allowed;
 }
 
-/* .page { */
-/*   display: flex; */
-/*   flex-direction: column; */
-/*   gap: 20px; */
-/*   align-items: center; */
-/* } */
-/**/
-/* .container { */
-/*   width: 800px; */
-/*   margin: 0 auto; */
-/* } */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.container {
+  width: 800px;
+  margin: 0 auto;
+}

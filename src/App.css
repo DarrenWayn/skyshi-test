@@ -25,6 +25,10 @@
   color: black;
 }
 
+.decks-small {
+  width: 45vw;
+}
+
 .decks li {
   position: relative;
   display: flex;

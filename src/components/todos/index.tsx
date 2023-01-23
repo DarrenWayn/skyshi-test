@@ -197,7 +197,7 @@ function Todos() {
             </option>
           ))}
         </select>
-        <ul className="decks">
+        <ul className="decks decks-small">
           {sorterCards?.map((card: any, index) => (
             <li key={index}>
               <input
