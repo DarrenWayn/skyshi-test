@@ -70,8 +70,12 @@ function Todos() {
     };
 
     const { todo_items: items } = await createTodo(data);
-    const newCards = [...cards, [items]];
-    setCards(newCards as []);
+    /* const newCards = [...cards, [items]]; */
+    /* setCards(newCards as []); */
+    /* setCards((prevCards) => { */
+    /*   return [...prevCards, [items] as any]; */
+    /* }); */
+    setCards([...cards, [items]] as any);
     setTitle("");
     setPriority("choose-priority");
   };

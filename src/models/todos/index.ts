@@ -12,3 +12,9 @@ export type TTodosResponse = {
   created_at: string;
   todo_items: TTodos[];
 };
+
+export type TodoData = {
+  title: string;
+  activity_group_id: string;
+  priority: string;
+};

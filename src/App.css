@@ -18,9 +18,9 @@
 
 .decks {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 10px;
-  width: 450px;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  grid-gap: 20px;
+  width: 85vw;
   margin: 0 auto;
   color: black;
 }
