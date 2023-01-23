@@ -3,11 +3,13 @@ import getTodoList from "../../api/todos/getTodoList";
 import updateTodo from "../../api/todos/updateTodo";
 import deleteTodo from "../../api/todos/deleteTodo";
 import { TTodos, TTodosResponse } from "../../models/todos/index";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { filters, options } from "../../constants";
 import updateActivity from "../../api/activity/updateActivity";
 import useSortCards from "../../hooks/sorting";
+import { LoadingContext } from "../../contexts/loader";
+import Loader from "../loader";
 
 function Todos() {
   const [todoList, setTodoList] = useState<TTodos | undefined>();
@@ -24,17 +26,17 @@ function Todos() {
 
   const [activeDropdown, setActiveDropdown] = useState<string>("");
   const [sorterCards, setSortedCards] = useState<TTodos[]>([]);
+  const { isLoading, setIsLoading } = useContext(LoadingContext);
 
   const { todoId } = useParams();
 
-  useEffect(() => {
-    (async () => {
-      if (!todoId) return;
-      const getTodos: any = await getTodoList(todoId);
-      setTodoList(getTodos);
-      setCards(getTodos.todo_items);
-    })();
-  }, [cards]);
+  const handleGetTodoList = async (todoId: any) => {
+    setIsLoading(true);
+    const getTodos: any = await getTodoList(todoId);
+    setTodoList(getTodos);
+    setCards(getTodos.todo_items);
+    setIsLoading(false);
+  };
 
   const handleUpdateActivity = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,13 +71,8 @@ function Todos() {
       priority,
     };
 
-    const { todo_items: items } = await createTodo(data);
-    /* const newCards = [...cards, [items]]; */
-    /* setCards(newCards as []); */
-    /* setCards((prevCards) => { */
-    /*   return [...prevCards, [items] as any]; */
-    /* }); */
-    setCards([...cards, [items]] as any);
+    await createTodo(data);
+    handleGetTodoList(todoId);
     setTitle("");
     setPriority("choose-priority");
   };
@@ -90,9 +87,8 @@ function Todos() {
       priority,
     };
 
-    const { todo_items: items } = await updateTodo(valueEdit);
-    const newCards = [...cards, [items]];
-    setCards(newCards as []);
+    await updateTodo(valueEdit);
+    handleGetTodoList(todoId);
     setTitle("");
     setPriority("choose-priority");
     handleCancelEditTodo();
@@ -112,7 +108,7 @@ function Todos() {
   const handleDeleteTodo = async (index: number) => {
     if (!index) return;
     await deleteTodo(index);
-    setCards([...cards.filter((_item, i) => i !== index)]);
+    handleGetTodoList(todoId);
   };
 
   const handleCheckbox = async (id: number) => {
@@ -125,6 +121,11 @@ function Todos() {
     const updatedItem = updatedCards.find((card) => card.id === id);
     await updateTodo({ ...updatedItem });
   };
+
+  useEffect(() => {
+    if (!todoId) return;
+    handleGetTodoList(todoId);
+  }, [todoId]);
 
   useEffect(() => {
     const sortedCards = useSortCards(cards, activeDropdown);
@@ -197,21 +198,25 @@ function Todos() {
             </option>
           ))}
         </select>
-        <ul className="decks decks-small">
-          {sorterCards?.map((card: any, index) => (
-            <li key={index}>
-              <input
-                type="checkbox"
-                checked={card.is_active === 0}
-                onClick={handleCheckbox.bind(this, card.id)}
-                readOnly
-              />
-              <a onClick={handleEditTodo.bind(this, card)}>{card.title}</a>
-              {card.priority}
-              <button onClick={() => handleDeleteTodo(card.id)}>X</button>
-            </li>
-          ))}
-        </ul>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <ul className="decks decks-small">
+            {sorterCards?.map((card: any, index) => (
+              <li key={index}>
+                <input
+                  type="checkbox"
+                  checked={card.is_active === 0}
+                  onClick={handleCheckbox.bind(this, card.id)}
+                  readOnly
+                />
+                <a onClick={handleEditTodo.bind(this, card)}>{card.title}</a>
+                {card.priority}
+                <button onClick={() => handleDeleteTodo(card.id)}>X</button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       <form
@@ -232,7 +237,6 @@ function Todos() {
             setTitle(e.target.value);
           }}
         />
-        <label htmlFor="priority">Choose Priority: </label>
 
         <select
           name="priority"
