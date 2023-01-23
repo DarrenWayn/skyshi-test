@@ -138,7 +138,10 @@ function Todos() {
     <React.Fragment>
       <h1 style={{ display: "flex" }}>
         <a href="/"> {backArrow} </a>
-        <a onClick={handleEditActivity.bind(this, todoList)}>
+        <a
+          onClick={handleEditActivity.bind(this, todoList)}
+          style={{ color: "white" }}
+        >
           {todoList?.title}
         </a>
       </h1>
@@ -181,7 +184,9 @@ function Todos() {
           gap: "1rem",
         }}
       >
-        <label htmlFor="filter">Filter: </label>
+        <label htmlFor="filter" style={{ color: "white" }}>
+          Filter:
+        </label>
         <select
           name="filter"
           id="filter"
@@ -228,7 +233,9 @@ function Todos() {
           gap: "1rem",
         }}
       >
-        <label htmlFor="deck-title">Todos</label>
+        <label htmlFor="deck-title" style={{ color: "white" }}>
+          Todos
+        </label>
         <input
           id="deck-title"
           value={title}
@@ -236,6 +243,7 @@ function Todos() {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setTitle(e.target.value);
           }}
+          placeholder="  Type Your TodoList Here ...."
         />
 
         <select

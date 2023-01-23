@@ -34,7 +34,7 @@ function Activity() {
 
   return (
     <React.Fragment>
-      <h1>Activity</h1>
+      <h1 style={{ color: "white" }}>Activity</h1>
       <ul className="decks">
         {activityList.map((activity: any) => (
           <li key={activity.id}>
