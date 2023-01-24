@@ -5,6 +5,7 @@ import deleteActivity from "../../api/activity/deleteActivity";
 import getActivityList from "../../api/activity/getActivityList";
 import { TActivity } from "../../models/activity";
 import ProperDate from "../../utils";
+import Header from "../header";
 
 function Activity() {
   const [activityList, setActivityList] = useState<TActivity[]>([]);
@@ -35,15 +36,11 @@ function Activity() {
 
   return (
     <React.Fragment>
-      <header className="bg-blue-400 py-4 pb-5">
-        <h1 className="ml-[27%] text-xl text-white font-bold">
-          TO DO LIST APP
-        </h1>
-      </header>
-      <div className="flex justify-around mx-[10%] items-baseline ">
+      <Header />
+      <div className="flex justify-around mx-[12%] items-baseline ">
         <h1 className="text-2xl font-bold ">Activity</h1>
         <form onSubmit={handleCreateActivity}>
-          <button className="bg-blue-400 rounded-2xl p-2 px-5 text-white">
+          <button className="bg-blue-400 rounded-full p-2 px-9 text-white text-lg">
             + Tambah
           </button>
         </form>
@@ -56,12 +53,14 @@ function Activity() {
           >
             <Link
               to={`detail/${activity.id}`}
-              className="flex flex-row text-black pb-[6rem]"
+              className="flex flex-row text-black pb-[6rem] font-bold"
             >
               {activity?.title}
             </Link>
             <div className="flex justify-between pb-3">
-              {ProperDate(activity?.created_at)}
+              <p className="text-gray-400">
+                {ProperDate(activity?.created_at)}
+              </p>
               <button onClick={() => handleDeleteActivity(activity.id)}>
                 X
               </button>

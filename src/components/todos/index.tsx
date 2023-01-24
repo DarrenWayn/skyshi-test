@@ -4,12 +4,14 @@ import updateTodo from "../../api/todos/updateTodo";
 import deleteTodo from "../../api/todos/deleteTodo";
 import { Todos, TodosResponse } from "../../models/todos/index";
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { filters, options } from "../../constants";
+import { Link, useParams } from "react-router-dom";
+import { options } from "../../constants";
 import updateActivity from "../../api/activity/updateActivity";
 import useSortCards from "../../hooks/sorting";
 import { LoadingContext } from "../../contexts/loader";
 import Loader from "../loader";
+import Header from "../header";
+import Sort from "../sort";
 
 function TodosComponent() {
   const [todoList, setTodoList] = useState<Todos | undefined>();
@@ -23,7 +25,8 @@ function TodosComponent() {
   );
 
   const [activeDropdown, setActiveDropdown] = useState<string>("");
-  const [sorterCards, setSortedCards] = useState<Todos[]>([]);
+  const [sortedCards, setSortedCards] = useState<Todos[]>([]);
+  const [sortClick, setSortClick] = useState<boolean>(false);
   const { isLoading, setIsLoading } = useContext(LoadingContext);
 
   const { todoId } = useParams();
@@ -125,6 +128,10 @@ function TodosComponent() {
     handleGetTodoList(todoId);
   }, [todoId]);
 
+  const handleSortClick = () => {
+    setSortClick(!sortClick);
+  };
+
   useEffect(() => {
     const sortedCards = useSortCards(cards, activeDropdown);
     setSortedCards(sortedCards);
@@ -134,16 +141,39 @@ function TodosComponent() {
 
   return (
     <React.Fragment>
-      <h1 style={{ display: "flex" }}>
-        <a href="/"> {backArrow} </a>
-        <a
-          onClick={handleEditActivity.bind(this, todoList)}
-          style={{ color: "white" }}
+      <Header />
+      <div className="flex justify-around mx-[14%] items-baseline mt-5">
+        <h1 className="text-2xl font-bold">
+          <Link to="/" className="font-bold text-lg ml-4 mr-3">
+            {backArrow}
+          </Link>
+          <a onClick={handleEditActivity.bind(this, todoList)}>
+            {todoList?.title}
+          </a>
+        </h1>
+        <form
+          onSubmit={editTodo?.id ? handleUpdateActivity : handleCreateTodo}
+          className="flex gap-2"
         >
-          {todoList?.title}
-        </a>
-      </h1>
+          <div
+            className="rounded-full text-gray-600 bg-gray-100 p-2 hover:cursor-pointer"
+            onClick={handleSortClick}
+          >
+            Sort
+          </div>
 
+          <button className="bg-blue-400 rounded-full p-2 px-9 text-white text-lg">
+            {editTodo.id ? "Simpan" : "+ Tambah"}
+          </button>
+        </form>
+      </div>
+
+      {sortClick ? (
+        <Sort
+          setSortClick={setSortClick}
+          setActiveDropdown={setActiveDropdown}
+        />
+      ) : null}
       {editActivity.id ? (
         <React.Fragment>
           <form
@@ -185,27 +215,12 @@ function TodosComponent() {
         <label htmlFor="filter" style={{ color: "white" }}>
           Filter:
         </label>
-        <select
-          name="filter"
-          id="filter"
-          value={activeDropdown || "terbaru"}
-          onChange={(e: any) => setActiveDropdown(e.target.value)}
-        >
-          {filters?.map((filter) => (
-            <option
-              key={filter.id}
-              value={filter.value}
-              onClick={() => setActiveDropdown(filter.value)}
-            >
-              {filter.label}
-            </option>
-          ))}
-        </select>
+
         {isLoading ? (
           <Loader />
         ) : (
           <ul className="decks decks-small">
-            {sorterCards?.map((card: any, index) => (
+            {sortedCards?.map((card: any, index) => (
               <li key={index}>
                 <input
                   type="checkbox"
@@ -267,7 +282,6 @@ function TodosComponent() {
             </option>
           ))}
         </select>
-        <button>{editTodo.id ? "save todo" : "create todo"}</button>
         {editTodo.id && (
           <button onClick={handleCancelEditTodo}>Cancel Edit</button>
         )}
