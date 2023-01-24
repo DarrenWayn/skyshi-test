@@ -2,7 +2,7 @@ import createTodo from "../../api/todos/createTodo";
 import getTodoList from "../../api/todos/getTodoList";
 import updateTodo from "../../api/todos/updateTodo";
 import deleteTodo from "../../api/todos/deleteTodo";
-import { TTodos, TTodosResponse } from "../../models/todos/index";
+import { Todos, TodosResponse } from "../../models/todos/index";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { filters, options } from "../../constants";
@@ -11,21 +11,19 @@ import useSortCards from "../../hooks/sorting";
 import { LoadingContext } from "../../contexts/loader";
 import Loader from "../loader";
 
-function Todos() {
-  const [todoList, setTodoList] = useState<TTodos | undefined>();
-  const [cards, setCards] = useState<TTodos[]>([]);
+function TodosComponent() {
+  const [todoList, setTodoList] = useState<Todos | undefined>();
+  const [cards, setCards] = useState<Todos[]>([]);
   const [title, setTitle] = useState<string>("");
   const [priority, setPriority] = useState<string>("choose-priority");
-  const [editTodo, setEditTodo] = useState<TTodosResponse>(
-    {} as TTodosResponse
-  );
+  const [editTodo, setEditTodo] = useState<TodosResponse>({} as TodosResponse);
   const [activity, setActivity] = useState<string>("");
-  const [editActivity, setEditActivity] = useState<TTodosResponse>(
-    {} as TTodosResponse
+  const [editActivity, setEditActivity] = useState<TodosResponse>(
+    {} as TodosResponse
   );
 
   const [activeDropdown, setActiveDropdown] = useState<string>("");
-  const [sorterCards, setSortedCards] = useState<TTodos[]>([]);
+  const [sorterCards, setSortedCards] = useState<Todos[]>([]);
   const { isLoading, setIsLoading } = useContext(LoadingContext);
 
   const { todoId } = useParams();
@@ -59,7 +57,7 @@ function Todos() {
   };
 
   const handleCancelEditActivity = () => {
-    setEditActivity({} as TTodosResponse);
+    setEditActivity({} as TodosResponse);
     setActivity("");
   };
 
@@ -101,7 +99,7 @@ function Todos() {
   };
 
   const handleCancelEditTodo = () => {
-    setEditTodo({} as TTodosResponse);
+    setEditTodo({} as TodosResponse);
     setTitle("");
   };
 
@@ -215,7 +213,12 @@ function Todos() {
                   onClick={handleCheckbox.bind(this, card.id)}
                   readOnly
                 />
-                <a onClick={handleEditTodo.bind(this, card)}>{card.title}</a>
+                <a
+                  onClick={handleEditTodo.bind(this, card)}
+                  style={{ color: "black" }}
+                >
+                  {card.title}
+                </a>
                 {card.priority}
                 <button onClick={() => handleDeleteTodo(card.id)}>X</button>
               </li>
@@ -273,4 +276,4 @@ function Todos() {
   );
 }
 
-export default Todos;
+export default TodosComponent;

@@ -3,10 +3,8 @@ import Activity from "./components/activity";
 
 function App() {
   return (
-    <div className="container">
-      <div className="App">
-        <Activity />
-      </div>
+    <div className="flex flex-col gap-5 w-full">
+      <Activity />
     </div>
   );
 }

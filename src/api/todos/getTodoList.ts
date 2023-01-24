@@ -1,7 +1,7 @@
-import { TTodosResponse } from "../../models/todos";
+import { TodosResponse } from "../../models/todos";
 import customAxios from "../api";
 
-const getTodoList = async (todoId: any): Promise<TTodosResponse[]> => {
+const getTodoList = async (todoId: any): Promise<TodosResponse[]> => {
   try {
     const res = await customAxios.get(`/activity-groups/${todoId}`);
     return res.data;

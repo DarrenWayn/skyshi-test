@@ -1,4 +1,4 @@
-export type TTodos = {
+export type Todos = {
   activity_group_id: number;
   id: number;
   title: string;
@@ -6,11 +6,11 @@ export type TTodos = {
   priority: string;
 };
 
-export type TTodosResponse = {
+export type TodosResponse = {
   id: string;
   title: string;
   created_at: string;
-  todo_items: TTodos[];
+  todo_items: Todos[];
 };
 
 export type TodoData = {

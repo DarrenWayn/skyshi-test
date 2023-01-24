@@ -1,7 +1,7 @@
-import { TTodosResponse } from "../../models/todos";
+import { TodosResponse } from "../../models/todos";
 import customAxios from "../api";
 
-const updateTodo = async (valueEdit: any): Promise<TTodosResponse> => {
+const updateTodo = async (valueEdit: any): Promise<TodosResponse> => {
   try {
     const { id } = valueEdit;
     const res = await customAxios.patch(`/todo-items/${id}`, valueEdit);

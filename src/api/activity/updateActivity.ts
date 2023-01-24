@@ -1,9 +1,9 @@
-import { TResponseActivity } from "../../models/activity";
+import { ActivityResponse } from "../../models/activity";
 import customAxios from "../api";
 
 const updateActivity = async (
   valueEditActivity: any
-): Promise<TResponseActivity> => {
+): Promise<ActivityResponse> => {
   try {
     const { activity_group_id } = valueEditActivity;
     const res = await customAxios.patch(

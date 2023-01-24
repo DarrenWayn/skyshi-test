@@ -23,9 +23,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ActivityContextProiver>
       <LoadingContextProvider>
-        <div className="page">
-          <RouterProvider router={router} />
-        </div>
+        <RouterProvider router={router} />
       </LoadingContextProvider>
     </ActivityContextProiver>
   </React.StrictMode>

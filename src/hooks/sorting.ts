@@ -1,7 +1,7 @@
-import { TTodos } from "../models/todos";
+import { Todos } from "../models/todos";
 
-export default function useSortCards(cards: TTodos[], activeDropdown: string) {
-  const sortAlphabetAscending = (a: TTodos, b: TTodos) => {
+export default function useSortCards(cards: Todos[], activeDropdown: string) {
+  const sortAlphabetAscending = (a: Todos, b: Todos) => {
     if (a.title > b.title) {
       return 1;
     } else if (a.title < b.title) {
@@ -11,7 +11,7 @@ export default function useSortCards(cards: TTodos[], activeDropdown: string) {
     }
   };
 
-  const sortAlphabetDescending = (a: TTodos, b: TTodos) => {
+  const sortAlphabetDescending = (a: Todos, b: Todos) => {
     if (a.title < b.title) {
       return 1;
     } else if (a.title > b.title) {
@@ -25,10 +25,10 @@ export default function useSortCards(cards: TTodos[], activeDropdown: string) {
 
   switch (activeDropdown) {
     case "terbaru":
-      sortedItems.sort((a: TTodos, b: TTodos) => b.id - a.id);
+      sortedItems.sort((a: Todos, b: Todos) => b.id - a.id);
       break;
     case "terlama":
-      sortedItems.sort((a: TTodos, b: TTodos) => a.id - b.id);
+      sortedItems.sort((a: Todos, b: Todos) => a.id - b.id);
       break;
     case "ascending":
       sortedItems.sort(sortAlphabetAscending);
@@ -37,7 +37,7 @@ export default function useSortCards(cards: TTodos[], activeDropdown: string) {
       sortedItems.sort(sortAlphabetDescending);
       break;
     case "belum-selesai":
-      sortedItems.sort((a: TTodos, b: TTodos) => b.is_active - a.is_active);
+      sortedItems.sort((a: Todos, b: Todos) => b.is_active - a.is_active);
       break;
   }
   return sortedItems;

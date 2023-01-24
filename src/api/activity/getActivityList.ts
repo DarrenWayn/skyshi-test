@@ -1,9 +1,9 @@
-import { TResponseActivity } from "../../models/activity";
+import { ActivityResponse } from "../../models/activity";
 import customAxios from "../api";
 
-const getActivityList = async (): Promise<TResponseActivity> => {
+const getActivityList = async (): Promise<ActivityResponse> => {
   try {
-    const res = await customAxios.get(
+    const res = await customAxios.get<ActivityResponse>(
       "/activity-groups?email=dwayn.dev@gmail.com"
     );
     return res.data;

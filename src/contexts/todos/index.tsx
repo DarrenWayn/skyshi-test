@@ -4,17 +4,17 @@ import createTodo from "../../api/todos/createTodo";
 import deleteTodo from "../../api/todos/deleteTodo";
 import getTodoList from "../../api/todos/getTodoList";
 import updateTodo from "../../api/todos/updateTodo";
-import { TTodos, TTodosResponse } from "../../models/todos";
+import { Todos, TodosResponse } from "../../models/todos";
 
 export const TodosContext = createContext({} as any);
 
 const TodosContextProvider = (props: any) => {
-  const [todoList, setTodoList] = useState<TTodos | undefined>();
-  const [cards, setCards] = useState<TTodos[]>([]);
+  const [todoList, setTodoList] = useState<Todos | undefined>();
+  const [cards, setCards] = useState<Todos[]>([]);
   const [title, setTitle] = useState<string>("");
   const [priority, setPriority] = useState<string>("");
   const [_, setFilter] = useState<string>("");
-  const [editTodo, setEditTodo] = useState<TTodosResponse>({} as any);
+  const [editTodo, setEditTodo] = useState<TodosResponse>({} as any);
 
   const { todoId } = useParams();
 
@@ -53,7 +53,7 @@ const TodosContextProvider = (props: any) => {
   };
 
   const handleCancelEditTodo = () => {
-    setEditTodo({} as TTodosResponse);
+    setEditTodo({} as TodosResponse);
     setTitle("");
   };
 

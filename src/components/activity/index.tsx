@@ -4,6 +4,7 @@ import createActivity from "../../api/activity/createActivity";
 import deleteActivity from "../../api/activity/deleteActivity";
 import getActivityList from "../../api/activity/getActivityList";
 import { TActivity } from "../../models/activity";
+import ProperDate from "../../utils";
 
 function Activity() {
   const [activityList, setActivityList] = useState<TActivity[]>([]);
@@ -34,21 +35,40 @@ function Activity() {
 
   return (
     <React.Fragment>
-      <h1 style={{ color: "white" }}>Activity</h1>
-      <ul className="decks">
+      <header className="bg-blue-400 py-4 pb-5">
+        <h1 className="ml-[27%] text-xl text-white font-bold">
+          TO DO LIST APP
+        </h1>
+      </header>
+      <div className="flex justify-around mx-[10%] items-baseline ">
+        <h1 className="text-2xl font-bold ">Activity</h1>
+        <form onSubmit={handleCreateActivity}>
+          <button className="bg-blue-400 rounded-2xl p-2 px-5 text-white">
+            + Tambah
+          </button>
+        </form>
+      </div>
+      <ul className="grid grid-cols-activity gap-4 w-[50%] my-0 mx-auto">
         {activityList.map((activity: any) => (
-          <li key={activity.id}>
-            <Link to={`detail/${activity.id}`}>
-              {activity?.title}, {activity?.created_at}
+          <li
+            key={activity.id}
+            className="rounded-xl border border-gray-50 shadow-md shadow-gray-400 px-5 pt-4"
+          >
+            <Link
+              to={`detail/${activity.id}`}
+              className="flex flex-row text-black pb-[6rem]"
+            >
+              {activity?.title}
             </Link>
-            <button onClick={() => handleDeleteActivity(activity.id)}>X</button>
+            <div className="flex justify-between pb-3">
+              {ProperDate(activity?.created_at)}
+              <button onClick={() => handleDeleteActivity(activity.id)}>
+                X
+              </button>
+            </div>
           </li>
         ))}
       </ul>
-
-      <form onSubmit={handleCreateActivity}>
-        <button>Create activity</button>
-      </form>
     </React.Fragment>
   );
 }

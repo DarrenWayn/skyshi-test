@@ -1,9 +1,9 @@
-import { TResponseActivity } from "../../models/activity";
+import { ActivityResponse } from "../../models/activity";
 import customAxios from "../api";
 
 const deleteActivity = async (
   activityId: number
-): Promise<TResponseActivity> => {
+): Promise<ActivityResponse> => {
   try {
     const res = await customAxios.delete(`/activity-groups/${activityId}`);
     return res?.data;

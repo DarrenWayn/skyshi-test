@@ -4,7 +4,7 @@ export type TActivity = {
   email: string;
 };
 
-export type TResponseActivity = {
+export type ActivityResponse = {
   total: number;
   limit: string;
   skip: number;

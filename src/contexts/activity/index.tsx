@@ -4,16 +4,16 @@ import deleteActivity from "../../api/activity/deleteActivity";
 import getActivityList from "../../api/activity/getActivityList";
 import updateActivity from "../../api/activity/updateActivity";
 import { TActivity } from "../../models/activity";
-import { TTodos, TTodosResponse } from "../../models/todos";
+import { Todos, TodosResponse } from "../../models/todos";
 
 export const ActivityContext = createContext({} as any);
 
 const ActivityContextProiver = (props: any) => {
   const [activityList, setActivityList] = useState<TActivity[]>([]);
   const [activity, setActivity] = useState<string>("");
-  const [editActivity, setEditActivity] = useState<TTodosResponse>({} as any);
+  const [editActivity, setEditActivity] = useState<TodosResponse>({} as any);
 
-  const [todoList, setTodoList] = useState<TTodos | undefined>();
+  const [todoList, setTodoList] = useState<Todos | undefined>();
 
   const handleCreateActivity = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,7 +53,7 @@ const ActivityContextProiver = (props: any) => {
   };
 
   const handleCancelEditActivity = () => {
-    setEditActivity({} as TTodosResponse);
+    setEditActivity({} as TodosResponse);
     setActivity("");
   };
 
