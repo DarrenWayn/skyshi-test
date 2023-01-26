@@ -162,7 +162,7 @@ function TodosComponent() {
             Sort
           </div>
 
-          <button className="bg-blue-400 rounded-full p-2 px-9 text-white text-lg">
+          <button className="bg-blue-400 rounded-full p-1 px-4 text-white text-lg">
             {editTodo.id ? "Simpan" : "+ Tambah"}
           </button>
         </form>
@@ -203,25 +203,16 @@ function TodosComponent() {
           </form>
         </React.Fragment>
       ) : null}
-      <div
-        className="todo-list"
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          width: "50%",
-          gap: "1rem",
-        }}
-      >
-        <label htmlFor="filter" style={{ color: "white" }}>
-          Filter:
-        </label>
-
+      <div className="mt-5">
         {isLoading ? (
           <Loader />
         ) : (
-          <ul className="decks decks-small">
+          <ul className="grid grid-cols-activity gap-4 w-[50%] my-0 mx-auto">
             {sortedCards?.map((card: any, index) => (
-              <li key={index}>
+              <li
+                key={index}
+                className="rounded-xl border border-gray-50 shadow-md shadow-gray-400 px-5 py-4"
+              >
                 <input
                   type="checkbox"
                   checked={card.is_active === 0}
@@ -244,16 +235,8 @@ function TodosComponent() {
 
       <form
         onSubmit={editTodo?.id ? handleUpdateTodo : handleCreateTodo}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          width: "50%",
-          gap: "1rem",
-        }}
+        className="flex w-[50%] gap-1 mt-5 my-0 mx-auto justify-center"
       >
-        <label htmlFor="deck-title" style={{ color: "white" }}>
-          Todos
-        </label>
         <input
           id="deck-title"
           value={title}
