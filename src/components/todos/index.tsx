@@ -3,7 +3,13 @@ import getTodoList from "../../api/todos/getTodoList";
 import updateTodo from "../../api/todos/updateTodo";
 import deleteTodo from "../../api/todos/deleteTodo";
 import { Todos, TodosResponse } from "../../models/todos/index";
-import React, { useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Link, useParams } from "react-router-dom";
 import { options } from "../../constants";
 import updateActivity from "../../api/activity/updateActivity";
@@ -12,8 +18,9 @@ import { LoadingContext } from "../../contexts/loader";
 import Loader from "../loader";
 import Header from "../header";
 import Sort from "../sort";
+import useClickOutside from "../../hooks/clickOutside";
 
-function TodosComponent() {
+const TodosComponent: React.FC = () => {
   const [todoList, setTodoList] = useState<Todos | undefined>();
   const [cards, setCards] = useState<Todos[]>([]);
   const [title, setTitle] = useState<string>("");
@@ -28,8 +35,15 @@ function TodosComponent() {
   const [sortedCards, setSortedCards] = useState<Todos[]>([]);
   const [sortClick, setSortClick] = useState<boolean>(false);
   const { isLoading, setIsLoading } = useContext(LoadingContext);
+  const ref = useRef<HTMLDivElement>(null);
 
   const { todoId } = useParams();
+
+  const handleClickOutside = useCallback(() => {
+    handleUpdateActivity();
+  }, [activity, editActivity]);
+
+  useClickOutside({ ref, callback: handleClickOutside });
 
   const handleGetTodoList = async (todoId: any) => {
     setIsLoading(true);
@@ -39,8 +53,8 @@ function TodosComponent() {
     setIsLoading(false);
   };
 
-  const handleUpdateActivity = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleUpdateActivity = async (/* e: React.FormEvent */) => {
+    /* e.preventDefault(); */
     if (!editActivity.id) return;
 
     const valueEditActivity = {
@@ -48,10 +62,13 @@ function TodosComponent() {
       activity_group_id: editActivity?.id,
     };
 
-    const { data: title }: any = await updateActivity(valueEditActivity);
-    setTodoList(title);
-    setActivity("");
+    /* const { data: updatedTitle }: any = await updateActivity(valueEditActivity); */
+    const updatedTodoList = await updateActivity(valueEditActivity);
+    setTodoList((prev: any) => {
+      return { ...prev, ...updatedTodoList };
+    });
     handleCancelEditActivity();
+    setActivity("");
   };
 
   const handleEditActivity = (activity: any) => {
@@ -142,7 +159,10 @@ function TodosComponent() {
   return (
     <React.Fragment>
       <Header />
-      <div className="flex justify-around mx-[14%] items-baseline mt-5">
+      <div
+        className="flex justify-around mx-[14%] items-baseline mt-5"
+        ref={ref}
+      >
         <h1 className="text-2xl font-bold">
           <Link to="/" className="font-bold  ml-4 mr-3">
             {backArrow}
@@ -287,6 +307,6 @@ function TodosComponent() {
       </form>
     </React.Fragment>
   );
-}
+};
 
 export default TodosComponent;
