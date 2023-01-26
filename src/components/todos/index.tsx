@@ -210,35 +210,6 @@ const TodosComponent: React.FC = () => {
           setActiveDropdown={setActiveDropdown}
         />
       ) : null}
-      {editActivity.id ? (
-        <React.Fragment>
-          <form
-            onSubmit={handleUpdateActivity}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "50%",
-              gap: "1rem",
-            }}
-          >
-            <label htmlFor="deck-title">Rename Activity: </label>
-            <input
-              id="deck-title"
-              value={activity}
-              required
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setActivity(e.target.value);
-              }}
-            />
-            <button>
-              {editActivity.id ? "save activity" : "create activity"}
-            </button>
-            {editActivity.id && (
-              <button onClick={handleCancelEditActivity}>Cancel Edit</button>
-            )}
-          </form>
-        </React.Fragment>
-      ) : null}
       <div className="mt-5">
         {isLoading ? (
           <Loader />
