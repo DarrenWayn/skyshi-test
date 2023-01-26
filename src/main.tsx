@@ -7,6 +7,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Todos from "./components/todos";
 import ActivityContextProiver from "./contexts/activity";
 import LoadingContextProvider from "./contexts/loader";
+import ModalContextProvider from "./contexts/modal";
 
 const router = createBrowserRouter([
   {
@@ -23,7 +24,9 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ActivityContextProiver>
       <LoadingContextProvider>
-        <RouterProvider router={router} />
+        <ModalContextProvider>
+          <RouterProvider router={router} />
+        </ModalContextProvider>
       </LoadingContextProvider>
     </ActivityContextProiver>
   </React.StrictMode>

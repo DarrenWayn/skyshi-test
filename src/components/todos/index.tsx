@@ -11,7 +11,6 @@ import React, {
   useState,
 } from "react";
 import { Link, useParams } from "react-router-dom";
-import { options } from "../../constants";
 import updateActivity from "../../api/activity/updateActivity";
 import useSortCards from "../../hooks/sorting";
 import { LoadingContext } from "../../contexts/loader";
@@ -19,6 +18,8 @@ import Loader from "../loader";
 import Header from "../header";
 import Sort from "../sort";
 import useClickOutside from "../../hooks/clickOutside";
+import Modal from "../modal";
+import { ModalContext } from "../../contexts/modal";
 
 const TodosComponent: React.FC = () => {
   const [todoList, setTodoList] = useState<Todos | undefined>();
@@ -34,6 +35,8 @@ const TodosComponent: React.FC = () => {
   const [activeDropdown, setActiveDropdown] = useState<string>("");
   const [sortedCards, setSortedCards] = useState<Todos[]>([]);
   const [sortClick, setSortClick] = useState<boolean>(false);
+  const { isModalOpen, handleOpenModal, handleCloseModal } =
+    useContext(ModalContext);
   const { isLoading, setIsLoading } = useContext(LoadingContext);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -116,6 +119,7 @@ const TodosComponent: React.FC = () => {
     setTitle(todo.title);
     setPriority(todo.priority);
     setEditTodo(todo);
+    handleOpenModal();
   };
 
   const handleCancelEditTodo = () => {
@@ -164,7 +168,7 @@ const TodosComponent: React.FC = () => {
         ref={ref}
       >
         <h1 className="text-xl xs:text-sm xss:text-sm font-bold">
-          <Link to="/" className="font-bold  ml-4 mr-2">
+          <Link to="/" className="font-bold  ml-4 mr-1">
             {backArrow}
           </Link>
           {editActivity.id ? null : (
@@ -198,8 +202,11 @@ const TodosComponent: React.FC = () => {
             Sort
           </div>
 
-          <button className="bg-blue-400 rounded-full px-4 text-white text-sm">
-            {editTodo.id ? "Simpan" : "+ Tambah"}
+          <button
+            onClick={handleOpenModal}
+            className="bg-blue-400 rounded-full px-4 text-white text-sm"
+          >
+            + Tambah
           </button>
         </form>
       </div>
@@ -215,25 +222,23 @@ const TodosComponent: React.FC = () => {
         {isLoading ? (
           <Loader />
         ) : (
-          <ul className="grid grid-cols-activity gap-4 w-[50%] my-0 mx-auto">
+          <ul className="w-[55%] mx-auto">
             {sortedCards?.map((card: any, index) => (
               <li
                 key={index}
-                className="rounded-xl border border-gray-50 shadow-md shadow-gray-400 px-5 py-4 flex justify-between"
+                className="rounded-xl border border-gray-50 shadow-md shadow-gray-400 px-5 py-4 flex justify-around mr-auto mb-5"
               >
-                <input
-                  type="checkbox"
-                  checked={card.is_active === 0}
-                  onClick={handleCheckbox.bind(this, card.id)}
-                  readOnly
-                />
-                <a
-                  onClick={handleEditTodo.bind(this, card)}
-                  style={{ color: "black" }}
-                >
-                  {card.title}
-                </a>
-                {card.priority}
+                <div>
+                  <input
+                    type="checkbox"
+                    checked={card.is_active === 0}
+                    onClick={handleCheckbox.bind(this, card.id)}
+                    readOnly
+                  />
+                  <p>{card.title}</p>
+                  <a onClick={handleEditTodo.bind(this, card)} className="mr-2 cursor-pointer">^</a>
+                  | {card.priority}
+                </div>
                 <button onClick={() => handleDeleteTodo(card.id)}>X</button>
               </li>
             ))}
@@ -241,42 +246,19 @@ const TodosComponent: React.FC = () => {
         )}
       </div>
 
-      <form
-        onSubmit={editTodo?.id ? handleUpdateTodo : handleCreateTodo}
-        className="flex w-[50%] gap-1 mt-5 my-0 mx-auto justify-center"
-      >
-        <input
-          id="deck-title"
-          value={title}
-          required
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            setTitle(e.target.value);
-          }}
-          placeholder="  Type Your TodoList Here ...."
+      {isModalOpen && (
+        <Modal
+          handleClose={handleCloseModal}
+          title={title}
+          editTodo={editTodo}
+          priority={priority}
+          setPriority={setPriority}
+          setTitle={setTitle}
+          handleCreateTodo={handleCreateTodo}
+          handleUpdateTodo={handleUpdateTodo}
+          isTodo={true}
         />
-
-        <select
-          name="priority"
-          id="priority"
-          value={priority}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-            setPriority(e.target.value)
-          }
-        >
-          {options?.map((option) => (
-            <option
-              key={option.id}
-              value={option.value}
-              defaultValue={priority}
-            >
-              {option?.label}
-            </option>
-          ))}
-        </select>
-        {editTodo.id && (
-          <button onClick={handleCancelEditTodo}>Cancel Edit</button>
-        )}
-      </form>
+      )}
     </React.Fragment>
   );
 };

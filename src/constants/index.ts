@@ -8,26 +8,31 @@ const options = [
     id: 2,
     value: "very-high",
     label: "Very High",
+    color: "red",
   },
   {
     id: 3,
     value: "high",
     label: "High",
+    color: "orange",
   },
   {
     id: 4,
     value: "normal",
     label: "Medium",
+    color: "green",
   },
   {
     id: 5,
     value: "low",
     label: "Low",
+    color: "blue",
   },
   {
     id: 6,
     value: "very-low",
     label: "Very Low",
+    color: "purple",
   },
 ];
 

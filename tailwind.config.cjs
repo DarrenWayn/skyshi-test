@@ -5,7 +5,6 @@ module.exports = {
     extend: {
       gridTemplateColumns: {
         activity: "repeat(auto-fit, minmax(135px, 1fr))",
-        /* mobileActivity: "repeat(auto-fit, minmax(165px, 1fr))", */
       },
     },
     screens: {
