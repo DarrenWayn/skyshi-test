@@ -144,11 +144,27 @@ function TodosComponent() {
       <Header />
       <div className="flex justify-around mx-[14%] items-baseline mt-5">
         <h1 className="text-2xl font-bold">
-          <Link to="/" className="font-bold text-lg ml-4 mr-3">
+          <Link to="/" className="font-bold  ml-4 mr-3">
             {backArrow}
           </Link>
-          <a onClick={handleEditActivity.bind(this, todoList)}>
-            {todoList?.title}
+          {editActivity.id ? null : (
+            <a className="text-md">{todoList?.title}</a>
+          )}
+          {editActivity.id ? (
+            <input
+              id="deck-title"
+              value={activity}
+              required
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setActivity(e.target.value);
+              }}
+            />
+          ) : null}
+          <a
+            onClick={handleEditActivity.bind(this, todoList)}
+            className="ml-2 text-md cursor-pointer"
+          >
+            ^
           </a>
         </h1>
         <form
@@ -156,13 +172,13 @@ function TodosComponent() {
           className="flex gap-2"
         >
           <div
-            className="rounded-full text-gray-600 bg-gray-100 p-2 hover:cursor-pointer"
+            className="rounded-full text-sm text-gray-600 bg-gray-100 p-2 hover:cursor-pointer"
             onClick={handleSortClick}
           >
             Sort
           </div>
 
-          <button className="bg-blue-400 rounded-full p-1 px-4 text-white text-lg">
+          <button className="bg-blue-400 rounded-full px-4 text-white text-sm">
             {editTodo.id ? "Simpan" : "+ Tambah"}
           </button>
         </form>
@@ -211,7 +227,7 @@ function TodosComponent() {
             {sortedCards?.map((card: any, index) => (
               <li
                 key={index}
-                className="rounded-xl border border-gray-50 shadow-md shadow-gray-400 px-5 py-4"
+                className="rounded-xl border border-gray-50 shadow-md shadow-gray-400 px-5 py-4 flex justify-between"
               >
                 <input
                   type="checkbox"

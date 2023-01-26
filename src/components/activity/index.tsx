@@ -40,12 +40,12 @@ function Activity() {
       <div className="flex justify-around mx-[12%] items-baseline ">
         <h1 className="text-2xl font-bold ">Activity</h1>
         <form onSubmit={handleCreateActivity}>
-          <button className="bg-blue-400 rounded-full p-1 px-4 text-white text-lg">
+          <button className="bg-blue-400 rounded-full p-2 px-4 text-white text-sm">
             + Tambah
           </button>
         </form>
       </div>
-      <ul className="grid grid-cols-activity gap-4 w-[50%] my-0 mx-auto">
+      <ul className="grid grid-cols-activity xss:grid-row xss:w-[80%] gap-4 w-[50%]  my-0 mx-auto mb-5">
         {activityList.map((activity: any) => (
           <li
             key={activity.id}
