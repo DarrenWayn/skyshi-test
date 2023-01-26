@@ -38,7 +38,7 @@ function Activity() {
     <React.Fragment>
       <Header />
       <div className="flex justify-around mx-[12%] items-baseline ">
-        <h1 className="text-2xl font-bold ">Activity</h1>
+        <h1 className="text-xl font-bold ">Activity</h1>
         <form onSubmit={handleCreateActivity}>
           <button className="bg-blue-400 rounded-full p-2 px-4 text-white text-sm">
             + Tambah

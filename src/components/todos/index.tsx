@@ -163,8 +163,8 @@ const TodosComponent: React.FC = () => {
         className="flex justify-around mx-[14%] items-baseline mt-5"
         ref={ref}
       >
-        <h1 className="text-2xl font-bold">
-          <Link to="/" className="font-bold  ml-4 mr-3">
+        <h1 className="text-xl xs:text-sm xss:text-sm font-bold">
+          <Link to="/" className="font-bold  ml-4 mr-2">
             {backArrow}
           </Link>
           {editActivity.id ? null : (
@@ -210,6 +210,7 @@ const TodosComponent: React.FC = () => {
           setActiveDropdown={setActiveDropdown}
         />
       ) : null}
+
       <div className="mt-5">
         {isLoading ? (
           <Loader />
