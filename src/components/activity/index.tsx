@@ -40,7 +40,10 @@ function Activity() {
       <div className="flex justify-around mx-[12%] items-baseline ">
         <h1 className="text-xl font-bold ">Activity</h1>
         <form onSubmit={handleCreateActivity}>
-          <button className="bg-blue-400 rounded-full p-2 px-4 text-white text-sm">
+          <button
+            className="bg-blue-400 rounded-full p-2 px-4 text-white text-sm"
+            data-cy="activity-add-button"
+          >
             + Tambah
           </button>
         </form>
@@ -50,10 +53,12 @@ function Activity() {
           <li
             key={activity.id}
             className="rounded-xl border border-gray-50 shadow-md shadow-gray-400 px-5 pt-4"
+            data-cy="activity-item"
           >
             <Link
               to={`detail/${activity.id}`}
               className="flex flex-row text-black pb-[6rem] font-bold"
+              data-cy="activity-title"
             >
               {activity?.title}
             </Link>
@@ -61,7 +66,10 @@ function Activity() {
               <p className="text-gray-400">
                 {ProperDate(activity?.created_at)}
               </p>
-              <button onClick={() => handleDeleteActivity(activity.id)}>
+              <button
+                onClick={() => handleDeleteActivity(activity.id)}
+                data-cy="activity-item-delete-button"
+              >
                 X
               </button>
             </div>
