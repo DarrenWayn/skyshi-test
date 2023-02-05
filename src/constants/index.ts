@@ -1,35 +1,35 @@
 const options = [
+  /* { */
+  /*   id: 1, */
+  /*   value: "choose-priority", */
+  /*   label: "Choose Priority", */
+  /* }, */
   {
     id: 1,
-    value: "choose-priority",
-    label: "Choose Priority",
-  },
-  {
-    id: 2,
     value: "very-high",
     label: "Very High",
     color: "red",
   },
   {
-    id: 3,
+    id: 2,
     value: "high",
     label: "High",
     color: "orange",
   },
   {
-    id: 4,
+    id: 3,
     value: "normal",
     label: "Medium",
     color: "green",
   },
   {
-    id: 5,
+    id: 4,
     value: "low",
     label: "Low",
     color: "blue",
   },
   {
-    id: 6,
+    id: 5,
     value: "very-low",
     label: "Very Low",
     color: "purple",
