@@ -15,6 +15,7 @@ import Header from "../header";
 import { ModalContext } from "../../contexts/modal";
 import ModalDelete from "../modal/modaldelete";
 import useClickOutside from "../../hooks/clickOutside";
+import emptyItem from "../../assets/images/empty-item.png";
 
 function Activity() {
   const [activityList, setActivityList] = useState<TActivity[]>([]);
@@ -89,6 +90,12 @@ function Activity() {
         </div>
       </div>
       <ul className="grid grid-cols-activity xss:grid-row xss:w-[80%] gap-4 w-[50%]  my-0 mx-auto mb-5">
+        {activityList?.length < 1 && (
+          <div className="cursor-pointer" data-cy="activity-empty-state">
+            <img src={emptyItem} alt="empty" onClick={handleCreateActivity} />
+          </div>
+        )}
+
         {activityList.map((activity: any) => (
           <li
             key={activity.id}
