@@ -7,24 +7,22 @@ type Modal = {
   setTitle: any;
   priority: any;
   setPriority: any;
-  handleCreateTodo: any;
   handleUpdateTodo: any;
   handleClose: any;
 };
 
-const ModalCreateaAndUpdate = ({
+const ModalUpdate = ({
   editTodo,
   title,
   setTitle,
   priority,
   setPriority,
-  handleCreateTodo,
   handleUpdateTodo,
   handleClose,
 }: Modal) => {
   return (
     <div
-      className="flex flex-col gap-1 mt-5 my-0 pt-10 pb-32 px-10 absolute mx-40 w-[70%]
+      className="flex flex-col gap-1 mt-5 pt-16 pb-28 px-10 absolute w-full top-28
       bg-white rounded-xl shadow-lg border border-gray-200"
     >
       <button onClick={handleClose} className="absolute left-[95%] top-3">
@@ -55,13 +53,13 @@ const ModalCreateaAndUpdate = ({
       </select>
       <button
         className="absolute left-[78%] top-[75%] bg-blue-400 rounded-full px-4 py-2 text-white text-sm w-[20%] cursor-pointer"
-        onClick={editTodo?.id ? handleUpdateTodo : handleCreateTodo}
+        onClick={editTodo?.id && handleUpdateTodo}
         disabled={title.length === 0}
       >
-        {editTodo?.id ? "Simpan" : "Tambah"}
+        Simpan
       </button>
     </div>
   );
 };
 
-export default ModalCreateaAndUpdate;
+export default ModalUpdate;

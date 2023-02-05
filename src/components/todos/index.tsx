@@ -18,9 +18,10 @@ import Loader from "../loader";
 import Header from "../header";
 import Sort from "../sort";
 import useClickOutside from "../../hooks/clickOutside";
-import ModalCreateAndUpdate from "../modal/modalcreateandupdate";
 import { ModalContext } from "../../contexts/modal";
 import ModalDelete from "../modal/modaldelete";
+import ModalCreate from "../modal/modalcreate";
+import ModalUpdate from "../modal/modalupdate";
 
 const TodosComponent: React.FC = () => {
   const [todoList, setTodoList] = useState<Todos | undefined>();
@@ -111,7 +112,7 @@ const TodosComponent: React.FC = () => {
 
   const handleUpdateTodo = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editTodo.id) return;
+    if (!editTodo?.id) return;
 
     const valueEdit = {
       title: title,
@@ -173,7 +174,7 @@ const TodosComponent: React.FC = () => {
     <React.Fragment>
       <Header />
       <div
-        className="flex justify-around mx-[14%] items-baseline mt-5"
+        className="flex justify-around mx-[14%] items-baseline mt-5 relative"
         ref={ref}
       >
         <h1 className="text-xl xs:text-sm xss:text-sm font-bold">
@@ -220,36 +221,47 @@ const TodosComponent: React.FC = () => {
           <button
             onClick={() => {
               handleOpenModal();
-              setModalType("add-update");
+              setModalType("create");
             }}
-            className="bg-blue-400 rounded-full px-4 text-white text-sm"
+            className="bg-blue-400 rounded-full px-4 text-white text-sm xs:text-xs"
           >
             + Tambah
           </button>
         </div>
+        {isModalOpen && modalType === "update" && (
+          <ModalUpdate
+            handleClose={handleCloseModal}
+            title={title}
+            editTodo={editTodo}
+            priority={priority}
+            setPriority={setPriority}
+            setTitle={setTitle}
+            handleUpdateTodo={handleUpdateTodo}
+          />
+        )}
+
+        {isModalOpen && modalType === "create" && (
+          <ModalCreate
+            data-cy="modal-add"
+            handleClose={handleCloseModal}
+            title={title}
+            priority={priority}
+            setPriority={setPriority}
+            setTitle={setTitle}
+            handleCreateTodo={handleCreateTodo}
+          />
+        )}
+
+        {isModalOpen && modalType === "delete" && (
+          <ModalDelete
+            data-cy="modal-delete"
+            selectedIndex={selectedIndex}
+            selectedTitle={selectedTitle}
+            handleDeleteTodo={handleDeleteTodo}
+            handleClose={handleCloseModal}
+          />
+        )}
       </div>
-
-      {isModalOpen && modalType === "add-update" && (
-        <ModalCreateAndUpdate
-          handleClose={handleCloseModal}
-          title={title}
-          editTodo={editTodo}
-          priority={priority}
-          setPriority={setPriority}
-          setTitle={setTitle}
-          handleCreateTodo={handleCreateTodo}
-          handleUpdateTodo={handleUpdateTodo}
-        />
-      )}
-
-      {isModalOpen && modalType === "delete" && (
-        <ModalDelete
-          selectedIndex={selectedIndex}
-          selectedTitle={selectedTitle}
-          handleDeleteTodo={handleDeleteTodo}
-          handleClose={handleCloseModal}
-        />
-      )}
 
       <div className="mt-5">
         {isLoading ? (
@@ -271,7 +283,7 @@ const TodosComponent: React.FC = () => {
                   <p>{card.title}</p>
                   <button
                     onClick={() => {
-                      setModalType("add-update");
+                      setModalType("update");
                       handleEditTodo(card);
                     }}
                     className="mr-2 cursor-pointer hover:text-blue-600 font-bold"
