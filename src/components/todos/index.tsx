@@ -239,13 +239,10 @@ const TodosComponent: React.FC = () => {
             + Tambah
           </button>
         </div>
-        <div
-          data-cy="modal-information"
-          className="absolute w-full top-28
-"
-        >
+        <div data-cy="modal-information" className="absolute w-full top-28">
           {isModalOpen && modalType === "update" && (
             <ModalUpdate
+              data-cy="modal-edit"
               handleClose={handleCloseModal}
               title={title}
               editTodo={editTodo}
@@ -258,6 +255,7 @@ const TodosComponent: React.FC = () => {
 
           {isModalOpen && modalType === "create" && (
             <ModalCreate
+              data-cy="modal-add"
               handleClose={handleCloseModal}
               title={title}
               priority={priority}
@@ -269,6 +267,7 @@ const TodosComponent: React.FC = () => {
 
           {isModalOpen && modalType === "delete" && (
             <ModalDelete
+              data-cy="modal-delete"
               selectedIndex={selectedIndex}
               selectedTitle={selectedTitle}
               handleDeleteTodo={handleDeleteTodo}

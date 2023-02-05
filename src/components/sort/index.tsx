@@ -3,10 +3,7 @@ import { filters } from "../../constants";
 const Sort = ({ setSortClick, setActiveDropdown, activeDropdown }: any) => {
   return (
     <div data-cy="sort-parent" className="flex absolute justify-around">
-      <ul
-        data-cy="sort-selection"
-        className="absolute left-0 right-0 rounded-xl hover:cursor-pointer  bg-gray-100 w-48"
-      >
+      <ul className="absolute left-0 right-0 rounded-xl hover:cursor-pointer  bg-gray-100 w-48">
         {filters?.map((filter) => (
           <li
             className="p-2 hover:bg-gray-200"
@@ -17,7 +14,10 @@ const Sort = ({ setSortClick, setActiveDropdown, activeDropdown }: any) => {
             }
             data-cy={activeDropdown && "sort-selection-selected"}
           >
-            <span data-cy="sort-selection-title">{filter.label}</span>
+            <div data-cy="sort-selection">
+              {" "}
+              <span data-cy="sort-selection-title">{filter.label}</span>
+            </div>
           </li>
         ))}
       </ul>
