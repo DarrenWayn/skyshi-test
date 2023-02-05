@@ -55,6 +55,7 @@ const TodosComponent: React.FC = () => {
 
   const handleClickOutside = useCallback(() => {
     handleUpdateActivity();
+    handleCloseModal();
   }, [activity, editActivity]);
 
   useClickOutside({ ref, callback: handleClickOutside });
