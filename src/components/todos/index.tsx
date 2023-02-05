@@ -223,6 +223,7 @@ const TodosComponent: React.FC = () => {
               <Sort
                 setSortClick={setSortClick}
                 setActiveDropdown={setActiveDropdown}
+                activeDropdown={activeDropdown}
               />
             ) : null}
           </div>

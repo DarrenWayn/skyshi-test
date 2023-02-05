@@ -1,6 +1,6 @@
 import { filters } from "../../constants";
 
-const Sort = ({ setSortClick, setActiveDropdown }: any) => {
+const Sort = ({ setSortClick, setActiveDropdown, activeDropdown }: any) => {
   return (
     <div data-cy="sort-parent" className="flex absolute justify-around">
       <ul
@@ -15,7 +15,7 @@ const Sort = ({ setSortClick, setActiveDropdown }: any) => {
             onClick={() =>
               setActiveDropdown(filter.value) || setSortClick(false)
             }
-            data-cy="sort-selection-selected"
+            data-cy={activeDropdown && "sort-selection-selected"}
           >
             <span data-cy="sort-selection-title">{filter.label}</span>
           </li>
