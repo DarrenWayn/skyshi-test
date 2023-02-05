@@ -69,7 +69,7 @@ function Activity() {
               selectedIndex={selectedIndex}
               selectedTitle={selectedTitle}
               handleClose={handleCloseModal}
-              isActivity={true}
+              activity={true}
             />
           )}
         </div>

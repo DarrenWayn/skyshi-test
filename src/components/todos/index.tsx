@@ -272,6 +272,7 @@ const TodosComponent: React.FC = () => {
               selectedTitle={selectedTitle}
               handleDeleteTodo={handleDeleteTodo}
               handleClose={handleCloseModal}
+              isActivity={false}
             />
           )}
         </div>
