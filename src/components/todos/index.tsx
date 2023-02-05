@@ -18,6 +18,7 @@ import Loader from "../loader";
 import Header from "../header";
 import Sort from "../sort";
 import useClickOutside from "../../hooks/clickOutside";
+import emptyItem from "../../assets/images/empty-item.png";
 import { ModalContext } from "../../contexts/modal";
 import ModalDelete from "../modal/modaldelete";
 import ModalCreate from "../modal/modalcreate";
@@ -283,6 +284,18 @@ const TodosComponent: React.FC = () => {
           <Loader />
         ) : (
           <ul className="w-[60%] max-w-5xl mx-auto">
+            {sortedCards?.length < 1 && (
+              <div className="cursor-pointer" data-cy="todo-empty-state">
+                <img
+                  src={emptyItem}
+                  alt="empty"
+                  onClick={() => {
+                    handleOpenModal();
+                    setModalType("create");
+                  }}
+                />
+              </div>
+            )}
             {sortedCards?.map((card: any, index) => (
               <li
                 key={index}
