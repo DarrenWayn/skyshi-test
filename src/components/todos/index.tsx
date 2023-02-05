@@ -188,7 +188,11 @@ const TodosComponent: React.FC = () => {
             {backArrow}
           </Link>
           {editActivity.id ? null : (
-            <a className="text-md" data-cy="todo-title">
+            <a
+              className="text-md cursor-pointer"
+              onClick={handleEditActivity.bind(this, todoList)}
+              data-cy="todo-title"
+            >
               {todoList?.title}
             </a>
           )}
