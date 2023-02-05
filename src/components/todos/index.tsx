@@ -18,7 +18,7 @@ import Loader from "../loader";
 import Header from "../header";
 import Sort from "../sort";
 import useClickOutside from "../../hooks/clickOutside";
-import Modal from "../modal";
+import ModalCreateAndUpdate from "../modal/modalcreateandupdate";
 import { ModalContext } from "../../contexts/modal";
 
 const TodosComponent: React.FC = () => {
@@ -96,6 +96,7 @@ const TodosComponent: React.FC = () => {
     handleGetTodoList(todoId);
     setTitle("");
     setPriority("choose-priority");
+    handleCloseModal();
   };
 
   const handleUpdateTodo = async (e: React.FormEvent) => {
@@ -113,6 +114,7 @@ const TodosComponent: React.FC = () => {
     setTitle("");
     setPriority("choose-priority");
     handleCancelEditTodo();
+    handleCloseModal();
   };
 
   const handleEditTodo = (todo: any) => {
@@ -148,10 +150,6 @@ const TodosComponent: React.FC = () => {
     if (!todoId) return;
     handleGetTodoList(todoId);
   }, [todoId]);
-
-  const handleSortClick = () => {
-    setSortClick(!sortClick);
-  };
 
   useEffect(() => {
     const sortedCards = useSortCards(cards, activeDropdown);
@@ -191,32 +189,44 @@ const TodosComponent: React.FC = () => {
             ^
           </a>
         </h1>
-        <form
-          onSubmit={editTodo?.id ? handleUpdateActivity : handleCreateTodo}
-          className="flex gap-2"
-        >
-          <div
-            className="rounded-full text-sm text-gray-600 bg-gray-100 p-2 hover:cursor-pointer"
-            onClick={handleSortClick}
-          >
-            Sort
+
+        <div className="flex gap-2">
+          <div className="relative">
+            <div
+              className="rounded-full text-sm text-gray-600 bg-gray-100 p-2 hover:cursor-pointer"
+              onClick={() => setSortClick(!sortClick)}
+            >
+              Sort
+            </div>
+            {sortClick ? (
+              <Sort
+                setSortClick={setSortClick}
+                setActiveDropdown={setActiveDropdown}
+              />
+            ) : null}
           </div>
 
           <button
-            onClick={handleOpenModal}
+            onClick={editTodo?.id ? handleUpdateActivity : handleOpenModal}
             className="bg-blue-400 rounded-full px-4 text-white text-sm"
           >
             + Tambah
           </button>
-        </form>
+        </div>
       </div>
 
-      {sortClick ? (
-        <Sort
-          setSortClick={setSortClick}
-          setActiveDropdown={setActiveDropdown}
+      {isModalOpen && (
+        <ModalCreateAndUpdate
+          handleClose={handleCloseModal}
+          title={title}
+          editTodo={editTodo}
+          priority={priority}
+          setPriority={setPriority}
+          setTitle={setTitle}
+          handleCreateTodo={handleCreateTodo}
+          handleUpdateTodo={handleUpdateTodo}
         />
-      ) : null}
+      )}
 
       <div className="mt-5">
         {isLoading ? (
@@ -226,9 +236,9 @@ const TodosComponent: React.FC = () => {
             {sortedCards?.map((card: any, index) => (
               <li
                 key={index}
-                className="rounded-xl border border-gray-50 shadow-md shadow-gray-400 px-5 py-4 flex justify-around mr-auto mb-5"
+                className="rounded-xl border border-gray-50 shadow-md shadow-gray-400 px-5 py-4 flex justify-between mr-auto mb-5"
               >
-                <div>
+                <div className="flex flex-wrap gap-2">
                   <input
                     type="checkbox"
                     checked={card.is_active === 0}
@@ -236,29 +246,25 @@ const TodosComponent: React.FC = () => {
                     readOnly
                   />
                   <p>{card.title}</p>
-                  <a onClick={handleEditTodo.bind(this, card)} className="mr-2 cursor-pointer">^</a>
+                  <a
+                    onClick={handleEditTodo.bind(this, card)}
+                    className="mr-2 cursor-pointer hover:text-blue-600"
+                  >
+                    ^
+                  </a>
                   | {card.priority}
                 </div>
-                <button onClick={() => handleDeleteTodo(card.id)}>X</button>
+                <button
+                  className="hover:text-blue-600"
+                  onClick={() => handleDeleteTodo(card.id)}
+                >
+                  X
+                </button>
               </li>
             ))}
           </ul>
         )}
       </div>
-
-      {isModalOpen && (
-        <Modal
-          handleClose={handleCloseModal}
-          title={title}
-          editTodo={editTodo}
-          priority={priority}
-          setPriority={setPriority}
-          setTitle={setTitle}
-          handleCreateTodo={handleCreateTodo}
-          handleUpdateTodo={handleUpdateTodo}
-          isTodo={true}
-        />
-      )}
     </React.Fragment>
   );
 };

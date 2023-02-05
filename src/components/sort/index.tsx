@@ -2,9 +2,8 @@ import { filters } from "../../constants";
 
 const Sort = ({ setSortClick, setActiveDropdown }: any) => {
   return (
-    <div className="flex justify-around">
-      <div />
-      <ul className="absolute right-44 rounded-xl hover:cursor-pointer  bg-gray-100 w-48">
+    <div className="flex absolute justify-around">
+      <ul className="absolute left-0 right-0 rounded-xl hover:cursor-pointer  bg-gray-100 w-48">
         {filters?.map((filter) => (
           <li
             className="p-2 hover:bg-gray-200"
