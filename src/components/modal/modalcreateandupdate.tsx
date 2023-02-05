@@ -22,11 +22,9 @@ const ModalCreateaAndUpdate = ({
   handleUpdateTodo,
   handleClose,
 }: Modal) => {
-  console.log(editTodo?.id);
-  console.count(handleCreateTodo);
   return (
     <div
-      className="flex flex-col gap-1 mt-5 my-0 pt-10 pb-32 px-10 absolute mx-56 w-[59%]
+      className="flex flex-col gap-1 mt-5 my-0 pt-10 pb-32 px-10 absolute mx-40 w-[70%]
       bg-white rounded-xl shadow-lg border border-gray-200"
     >
       <button onClick={handleClose} className="absolute left-[95%] top-3">

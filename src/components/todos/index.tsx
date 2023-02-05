@@ -27,7 +27,7 @@ const TodosComponent: React.FC = () => {
   const [cards, setCards] = useState<Todos[]>([]);
   const [title, setTitle] = useState<string>("");
   const [priority, setPriority] = useState<string>("choose-priority");
-  const [editTodo, setEditTodo] = useState<TodosResponse>({} as TodosResponse);
+  const [editTodo, setEditTodo] = useState<TodosResponse | null>(null);
   const [activity, setActivity] = useState<string>("");
   const [editActivity, setEditActivity] = useState<TodosResponse>(
     {} as TodosResponse
@@ -38,6 +38,9 @@ const TodosComponent: React.FC = () => {
   const [sortClick, setSortClick] = useState<boolean>(false);
 
   const [selectedIndex, setSelectedIndex] = useState<number | undefined>(
+    undefined
+  );
+  const [selectedTitle, setSelectedTitle] = useState<string | undefined>(
     undefined
   );
 
@@ -215,14 +218,10 @@ const TodosComponent: React.FC = () => {
           </div>
 
           <button
-            onClick={
-              editTodo?.id
-                ? handleUpdateActivity
-                : () => {
-                    handleOpenModal();
-                    setModalType("add-update");
-                  }
-            }
+            onClick={() => {
+              handleOpenModal();
+              setModalType("add-update");
+            }}
             className="bg-blue-400 rounded-full px-4 text-white text-sm"
           >
             + Tambah
@@ -246,6 +245,7 @@ const TodosComponent: React.FC = () => {
       {isModalOpen && modalType === "delete" && (
         <ModalDelete
           selectedIndex={selectedIndex}
+          selectedTitle={selectedTitle}
           handleDeleteTodo={handleDeleteTodo}
           handleClose={handleCloseModal}
         />
@@ -255,7 +255,7 @@ const TodosComponent: React.FC = () => {
         {isLoading ? (
           <Loader />
         ) : (
-          <ul className="w-[60%] mx-auto">
+          <ul className="w-[60%] max-w-5xl mx-auto">
             {sortedCards?.map((card: any, index) => (
               <li
                 key={index}
@@ -269,12 +269,15 @@ const TodosComponent: React.FC = () => {
                     readOnly
                   />
                   <p>{card.title}</p>
-                  <a
-                    onClick={handleEditTodo.bind(this, card)}
+                  <button
+                    onClick={() => {
+                      setModalType("add-update");
+                      handleEditTodo(card);
+                    }}
                     className="mr-2 cursor-pointer hover:text-blue-600 font-bold"
                   >
                     Edit
-                  </a>
+                  </button>
                 </div>
 
                 <button
@@ -282,6 +285,7 @@ const TodosComponent: React.FC = () => {
                   onClick={() => {
                     handleOpenModal();
                     setSelectedIndex(card.id);
+                    setSelectedTitle(card.title);
                     setModalType("delete");
                   }}
                 >
