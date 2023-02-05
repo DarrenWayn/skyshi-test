@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Link } from "react-router-dom";
 import createActivity from "../../api/activity/createActivity";
 import deleteActivity from "../../api/activity/deleteActivity";
@@ -8,6 +14,7 @@ import { TActivity } from "../../models/activity";
 import Header from "../header";
 import { ModalContext } from "../../contexts/modal";
 import ModalDelete from "../modal/modaldelete";
+import useClickOutside from "../../hooks/clickOutside";
 
 function Activity() {
   const [activityList, setActivityList] = useState<TActivity[]>([]);
@@ -18,6 +25,7 @@ function Activity() {
   const [selectedTitle, setSelectedTitle] = useState<string | undefined>(
     undefined
   );
+  const ref = useRef<HTMLDivElement>(null);
   const { isModalOpen, handleOpenModal, handleCloseModal } =
     useContext(ModalContext);
 
@@ -39,6 +47,12 @@ function Activity() {
     handleCloseModal();
   };
 
+  const handleClickOutside = useCallback(() => {
+    handleCloseModal();
+  }, [activityList]);
+
+  useClickOutside({ ref, callback: handleClickOutside });
+
   useEffect(() => {
     (async () => {
       const getLists = await getActivityList();
@@ -49,7 +63,7 @@ function Activity() {
   return (
     <React.Fragment>
       <Header />
-      <div className="flex justify-around mx-[12%] items-baseline ">
+      <div className="flex justify-around mx-[12%] items-baseline" ref={ref}>
         <h1 className="text-xl font-bold" data-cy="activity-title">
           Activity
         </h1>
