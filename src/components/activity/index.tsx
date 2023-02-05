@@ -19,6 +19,7 @@ import emptyItem from "../../assets/images/empty-item.png";
 
 function Activity() {
   const [activityList, setActivityList] = useState<TActivity[]>([]);
+  const [modalText, setModalText] = useState("Activity berhasil dihapus");
   const [modalType, setModalType] = useState<string>("");
   const [selectedIndex, setSelectedIndex] = useState<number | undefined>(
     undefined
@@ -46,6 +47,7 @@ function Activity() {
       activityList.filter((activity) => activity.id !== activityId)
     );
     handleCloseModal();
+    setModalText("Activity berhasil dihapus");
   };
 
   const handleClickOutside = useCallback(() => {
@@ -80,6 +82,7 @@ function Activity() {
           {isModalOpen && modalType === "delete" && (
             <ModalDelete
               data-cy="modal-delete"
+              text={modalText}
               handleDeleteActivity={handleDeleteActivity}
               selectedIndex={selectedIndex}
               selectedTitle={selectedTitle}

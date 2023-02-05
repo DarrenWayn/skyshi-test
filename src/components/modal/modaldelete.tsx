@@ -4,6 +4,7 @@ const ModalDelete = ({
   handleDeleteActivity,
   selectedIndex,
   selectedTitle,
+  text,
   isActivity = true,
 }: any) => (
   <div
@@ -18,6 +19,7 @@ const ModalDelete = ({
     >
       X
     </button>
+    <p className="pl-3 pr-3" dangerouslySetInnerHTML={{ __html: text }}></p>
     <p className="text-center mb-5" data-cy="modal-delete-title">
       Are you sure you want to delete this "{selectedTitle}" ?
     </p>

@@ -330,6 +330,7 @@ const TodosComponent: React.FC = () => {
 
                 <button
                   className="hover:text-blue-600"
+                  data-cy="todo-item-delete-button"
                   onClick={() => {
                     handleOpenModal();
                     setSelectedIndex(card.id);
