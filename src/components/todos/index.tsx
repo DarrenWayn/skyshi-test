@@ -27,7 +27,7 @@ const TodosComponent: React.FC = () => {
   const [todoList, setTodoList] = useState<Todos | undefined>();
   const [cards, setCards] = useState<Todos[]>([]);
   const [title, setTitle] = useState<string>("");
-  const [priority, setPriority] = useState<string>("terbaru");
+  const [priority, setPriority] = useState<string>("very-high");
   const [editTodo, setEditTodo] = useState<TodosResponse | null>(null);
   const [activity, setActivity] = useState<string>("");
   const [editActivity, setEditActivity] = useState<TodosResponse>(
@@ -107,7 +107,7 @@ const TodosComponent: React.FC = () => {
     await createTodo(data);
     handleGetTodoList(todoId);
     setTitle("");
-    setPriority("terbaru");
+    setPriority("very-high");
     handleCloseModal();
   };
 
@@ -124,7 +124,7 @@ const TodosComponent: React.FC = () => {
     await updateTodo(valueEdit);
     handleGetTodoList(todoId);
     setTitle("");
-    setPriority("choose-priority");
+    setPriority("very-high");
     handleCancelEditTodo();
     handleCloseModal();
   };
