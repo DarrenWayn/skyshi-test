@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import createActivity from "../../api/activity/createActivity";
 import deleteActivity from "../../api/activity/deleteActivity";
@@ -6,9 +6,20 @@ import getActivityList from "../../api/activity/getActivityList";
 import dayjs from "dayjs";
 import { TActivity } from "../../models/activity";
 import Header from "../header";
+import { ModalContext } from "../../contexts/modal";
+import ModalDelete from "../modal/modaldelete";
 
 function Activity() {
   const [activityList, setActivityList] = useState<TActivity[]>([]);
+  const [modalType, setModalType] = useState<string>("");
+  const [selectedIndex, setSelectedIndex] = useState<number | undefined>(
+    undefined
+  );
+  const [selectedTitle, setSelectedTitle] = useState<string | undefined>(
+    undefined
+  );
+  const { isModalOpen, handleOpenModal, handleCloseModal } =
+    useContext(ModalContext);
 
   const handleCreateActivity = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,6 +36,7 @@ function Activity() {
     setActivityList(
       activityList.filter((activity) => activity.id !== activityId)
     );
+    handleCloseModal();
   };
 
   useEffect(() => {
@@ -49,6 +61,18 @@ function Activity() {
             + Tambah
           </button>
         </form>
+        <div data-cy="modal-information" className="absolute w-full top-28">
+          {isModalOpen && modalType === "delete" && (
+            <ModalDelete
+              data-cy="modal-delete"
+              handleDeleteActivity={handleDeleteActivity}
+              selectedIndex={selectedIndex}
+              selectedTitle={selectedTitle}
+              handleClose={handleCloseModal}
+              isActivity={true}
+            />
+          )}
+        </div>
       </div>
       <ul className="grid grid-cols-activity xss:grid-row xss:w-[80%] gap-4 w-[50%]  my-0 mx-auto mb-5">
         {activityList.map((activity: any) => (
@@ -71,7 +95,12 @@ function Activity() {
                   .format("DD MMMM YYYY")}
               </span>
               <button
-                onClick={() => handleDeleteActivity(activity.id)}
+                onClick={() => {
+                  handleOpenModal();
+                  setModalType("delete");
+                  setSelectedIndex(activity.id);
+                  setSelectedTitle(activity.title);
+                }}
                 data-cy="activity-item-delete-button"
               >
                 X

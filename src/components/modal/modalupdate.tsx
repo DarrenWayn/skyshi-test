@@ -25,7 +25,7 @@ const ModalUpdate = ({
       className="flex flex-col gap-1 mt-5 pt-16 pb-28 px-10
       bg-white rounded-xl shadow-lg border border-gray-200"
     >
-      <button onClick={handleClose} className="absolute left-[95%] top-3">
+      <button onClick={handleClose} className="absolute left-[95%] top-6">
         X
       </button>
 

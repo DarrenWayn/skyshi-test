@@ -1,8 +1,10 @@
 const ModalDelete = ({
   handleClose,
   handleDeleteTodo,
+  handleDeleteActivity,
   selectedIndex,
   selectedTitle,
+  isActivity = true,
 }: any) => (
   <div
     className="flex flex-col gap-1 mt-5 py-16 px-10
@@ -11,7 +13,7 @@ const ModalDelete = ({
   >
     <button
       onClick={handleClose}
-      className="absolute left-[97%] top-2"
+      className="absolute left-[95%] top-7"
       data-cy="modal-delete-icon"
     >
       X
@@ -31,7 +33,11 @@ const ModalDelete = ({
       <button
         className="bg-red-400 rounded-full px-4 py-2 text-white text-sm cursor-pointer"
         data-cy="modal-delete-confirm-button"
-        onClick={() => handleDeleteTodo(selectedIndex)}
+        onClick={() =>
+          isActivity
+            ? handleDeleteActivity(selectedIndex)
+            : handleDeleteTodo(selectedIndex)
+        }
       >
         Hapus
       </button>

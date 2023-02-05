@@ -26,7 +26,7 @@ const ModalCreate = ({
     >
       <button
         onClick={handleClose}
-        className="absolute left-[95%] top-3"
+        className="absolute left-[95%] top-6"
         data-cy="modal-add-close-button"
       >
         X
