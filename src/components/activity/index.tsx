@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import createActivity from "../../api/activity/createActivity";
 import deleteActivity from "../../api/activity/deleteActivity";
 import getActivityList from "../../api/activity/getActivityList";
+import dayjs from "dayjs";
 import { TActivity } from "../../models/activity";
-import ProperDate from "../../utils";
 import Header from "../header";
 
 function Activity() {
@@ -38,7 +38,9 @@ function Activity() {
     <React.Fragment>
       <Header />
       <div className="flex justify-around mx-[12%] items-baseline ">
-        <h1 className="text-xl font-bold ">Activity</h1>
+        <h1 className="text-xl font-bold" data-cy="activity-title">
+          Activity
+        </h1>
         <form onSubmit={handleCreateActivity}>
           <button
             className="bg-blue-400 rounded-full p-2 px-4 text-white text-sm"
@@ -63,9 +65,11 @@ function Activity() {
               {activity?.title}
             </Link>
             <div className="flex justify-between pb-3">
-              <p className="text-gray-400">
-                {ProperDate(activity?.created_at)}
-              </p>
+              <span className="text-gray-400" data-cy="activity-item-date">
+                {dayjs(activity?.created_at)
+                  .locale("id")
+                  .format("DD MMMM YYYY")}
+              </span>
               <button
                 onClick={() => handleDeleteActivity(activity.id)}
                 data-cy="activity-item-delete-button"

@@ -22,7 +22,7 @@ const ModalUpdate = ({
 }: Modal) => {
   return (
     <div
-      className="flex flex-col gap-1 mt-5 pt-16 pb-28 px-10 absolute w-full top-28
+      className="flex flex-col gap-1 mt-5 pt-16 pb-28 px-10
       bg-white rounded-xl shadow-lg border border-gray-200"
     >
       <button onClick={handleClose} className="absolute left-[95%] top-3">
@@ -35,7 +35,6 @@ const ModalUpdate = ({
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           setTitle(e.target.value);
         }}
-        placeholder="  Tambahkan nama Activity"
       />
       <select
         name="priority"

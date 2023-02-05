@@ -179,11 +179,17 @@ const TodosComponent: React.FC = () => {
         ref={ref}
       >
         <h1 className="text-xl xs:text-sm xss:text-sm font-bold">
-          <Link to="/" className="font-bold  ml-4 mr-1">
+          <Link
+            to="/"
+            className="font-bold  ml-4 mr-1"
+            data-cy="todo-back-button"
+          >
             {backArrow}
           </Link>
           {editActivity.id ? null : (
-            <a className="text-md">{todoList?.title}</a>
+            <a className="text-md" data-cy="todo-title">
+              {todoList?.title}
+            </a>
           )}
           {editActivity.id ? (
             <input
@@ -197,6 +203,7 @@ const TodosComponent: React.FC = () => {
           ) : null}
           <a
             onClick={handleEditActivity.bind(this, todoList)}
+            data-cy="todo-title-edit-button"
             className="ml-2 text-md cursor-pointer hover:text-blue-400"
           >
             Edit
@@ -207,6 +214,7 @@ const TodosComponent: React.FC = () => {
           <div className="relative">
             <div
               className="rounded-full text-sm text-gray-600 bg-gray-100 p-2 hover:cursor-pointer"
+              data-cy="todo-sort-button"
               onClick={() => setSortClick(!sortClick)}
             >
               Sort
@@ -225,43 +233,48 @@ const TodosComponent: React.FC = () => {
               setModalType("create");
             }}
             className="bg-blue-400 rounded-full px-4 text-white text-sm xs:text-xs"
+            data-cy="todo-add-button"
           >
             + Tambah
           </button>
         </div>
-        {isModalOpen && modalType === "update" && (
-          <ModalUpdate
-            handleClose={handleCloseModal}
-            title={title}
-            editTodo={editTodo}
-            priority={priority}
-            setPriority={setPriority}
-            setTitle={setTitle}
-            handleUpdateTodo={handleUpdateTodo}
-          />
-        )}
+        <div
+          data-cy="modal-information"
+          className="absolute w-full top-28
+"
+        >
+          {isModalOpen && modalType === "update" && (
+            <ModalUpdate
+              handleClose={handleCloseModal}
+              title={title}
+              editTodo={editTodo}
+              priority={priority}
+              setPriority={setPriority}
+              setTitle={setTitle}
+              handleUpdateTodo={handleUpdateTodo}
+            />
+          )}
 
-        {isModalOpen && modalType === "create" && (
-          <ModalCreate
-            data-cy="modal-add"
-            handleClose={handleCloseModal}
-            title={title}
-            priority={priority}
-            setPriority={setPriority}
-            setTitle={setTitle}
-            handleCreateTodo={handleCreateTodo}
-          />
-        )}
+          {isModalOpen && modalType === "create" && (
+            <ModalCreate
+              handleClose={handleCloseModal}
+              title={title}
+              priority={priority}
+              setPriority={setPriority}
+              setTitle={setTitle}
+              handleCreateTodo={handleCreateTodo}
+            />
+          )}
 
-        {isModalOpen && modalType === "delete" && (
-          <ModalDelete
-            data-cy="modal-delete"
-            selectedIndex={selectedIndex}
-            selectedTitle={selectedTitle}
-            handleDeleteTodo={handleDeleteTodo}
-            handleClose={handleCloseModal}
-          />
-        )}
+          {isModalOpen && modalType === "delete" && (
+            <ModalDelete
+              selectedIndex={selectedIndex}
+              selectedTitle={selectedTitle}
+              handleDeleteTodo={handleDeleteTodo}
+              handleClose={handleCloseModal}
+            />
+          )}
+        </div>
       </div>
 
       <div className="mt-5">
@@ -273,20 +286,24 @@ const TodosComponent: React.FC = () => {
               <li
                 key={index}
                 className="rounded-xl border border-gray-50 shadow-md shadow-gray-400 px-5 py-4 flex justify-between mr-auto mb-5"
+                data-cy="todo-item"
               >
                 <div className="flex flex-wrap gap-2">
                   <input
                     type="checkbox"
                     checked={card.is_active === 0}
                     onClick={handleCheckbox.bind(this, card.id)}
+                    data-cy="todo-item-checkbox"
                     readOnly
                   />
-                  <p>{card.title}</p>
+                  <p data-cy="todo-item-priority-indicator">{card.priority}</p>
+                  <p data-cy="todo-title">{card.title}</p>
                   <button
                     onClick={() => {
                       setModalType("update");
                       handleEditTodo(card);
                     }}
+                    data-cy="todo-item-edit-button"
                     className="mr-2 cursor-pointer hover:text-blue-600 font-bold"
                   >
                     Edit

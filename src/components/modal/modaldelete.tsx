@@ -5,11 +5,15 @@ const ModalDelete = ({
   selectedTitle,
 }: any) => (
   <div
-    className="flex flex-col gap-1 mt-5 py-16 px-10 absolute w-full top-28
+    className="flex flex-col gap-1 mt-5 py-16 px-10
       bg-white rounded-xl shadow-lg border border-gray-200"
-    data-cy="todo-modal-delete"
+    data-cy="modal-delete"
   >
-    <button onClick={handleClose} className="absolute left-[97%] top-2">
+    <button
+      onClick={handleClose}
+      className="absolute left-[97%] top-2"
+      data-cy="modal-delete-icon"
+    >
       X
     </button>
     <p className="text-center mb-5" data-cy="modal-delete-title">
