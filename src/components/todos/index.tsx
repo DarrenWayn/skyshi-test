@@ -20,6 +20,7 @@ import Sort from "../sort";
 import useClickOutside from "../../hooks/clickOutside";
 import ModalCreateAndUpdate from "../modal/modalcreateandupdate";
 import { ModalContext } from "../../contexts/modal";
+import ModalDelete from "../modal/modaldelete";
 
 const TodosComponent: React.FC = () => {
   const [todoList, setTodoList] = useState<Todos | undefined>();
@@ -35,6 +36,12 @@ const TodosComponent: React.FC = () => {
   const [activeDropdown, setActiveDropdown] = useState<string>("");
   const [sortedCards, setSortedCards] = useState<Todos[]>([]);
   const [sortClick, setSortClick] = useState<boolean>(false);
+
+  const [selectedIndex, setSelectedIndex] = useState<number | undefined>(
+    undefined
+  );
+
+  const [modalType, setModalType] = useState<string>("");
   const { isModalOpen, handleOpenModal, handleCloseModal } =
     useContext(ModalContext);
   const { isLoading, setIsLoading } = useContext(LoadingContext);
@@ -133,6 +140,7 @@ const TodosComponent: React.FC = () => {
     if (!index) return;
     await deleteTodo(index);
     handleGetTodoList(todoId);
+    handleCloseModal();
   };
 
   const handleCheckbox = async (id: number) => {
@@ -184,9 +192,9 @@ const TodosComponent: React.FC = () => {
           ) : null}
           <a
             onClick={handleEditActivity.bind(this, todoList)}
-            className="ml-2 text-md cursor-pointer"
+            className="ml-2 text-md cursor-pointer hover:text-blue-400"
           >
-            ^
+            Edit
           </a>
         </h1>
 
@@ -207,7 +215,14 @@ const TodosComponent: React.FC = () => {
           </div>
 
           <button
-            onClick={editTodo?.id ? handleUpdateActivity : handleOpenModal}
+            onClick={
+              editTodo?.id
+                ? handleUpdateActivity
+                : () => {
+                    handleOpenModal();
+                    setModalType("add-update");
+                  }
+            }
             className="bg-blue-400 rounded-full px-4 text-white text-sm"
           >
             + Tambah
@@ -215,7 +230,7 @@ const TodosComponent: React.FC = () => {
         </div>
       </div>
 
-      {isModalOpen && (
+      {isModalOpen && modalType === "add-update" && (
         <ModalCreateAndUpdate
           handleClose={handleCloseModal}
           title={title}
@@ -228,11 +243,19 @@ const TodosComponent: React.FC = () => {
         />
       )}
 
+      {isModalOpen && modalType === "delete" && (
+        <ModalDelete
+          selectedIndex={selectedIndex}
+          handleDeleteTodo={handleDeleteTodo}
+          handleClose={handleCloseModal}
+        />
+      )}
+
       <div className="mt-5">
         {isLoading ? (
           <Loader />
         ) : (
-          <ul className="w-[55%] mx-auto">
+          <ul className="w-[60%] mx-auto">
             {sortedCards?.map((card: any, index) => (
               <li
                 key={index}
@@ -248,15 +271,19 @@ const TodosComponent: React.FC = () => {
                   <p>{card.title}</p>
                   <a
                     onClick={handleEditTodo.bind(this, card)}
-                    className="mr-2 cursor-pointer hover:text-blue-600"
+                    className="mr-2 cursor-pointer hover:text-blue-600 font-bold"
                   >
-                    ^
+                    Edit
                   </a>
-                  | {card.priority}
                 </div>
+
                 <button
                   className="hover:text-blue-600"
-                  onClick={() => handleDeleteTodo(card.id)}
+                  onClick={() => {
+                    handleOpenModal();
+                    setSelectedIndex(card.id);
+                    setModalType("delete");
+                  }}
                 >
                   X
                 </button>
